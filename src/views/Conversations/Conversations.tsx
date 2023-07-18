@@ -17,7 +17,7 @@ const Conversations = ({chapter}) => {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.itemContainer}
-      onPress={() => setConversationChoosed(item.id)}
+      onPress={() => setConversationChoosed(item.name)}
     >
       <Text style={styles.itemText}>{item.name}</Text>
     </TouchableOpacity>
@@ -32,7 +32,7 @@ const Conversations = ({chapter}) => {
             style={[{ paddingTop: 35 }, {height: 70}] } 
             name="arrow-back-outline"
              size={36} color="black" />
-          <Conversation conversationId={conversationChoosed} chapterConversation={conversations}></Conversation>
+          <Conversation contactName={conversationChoosed} chapterConversation={conversations} chapter={chapter}></Conversation>
         </Modal>
       )
       }
