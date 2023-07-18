@@ -8,3 +8,11 @@ export const narativeIndicationsForChapter = (chapterNumber) => {
         return chapterOne.narativeIndications
     }
 }
+
+export const startingConversations = (chapterNumber) => {
+    if(chapterNumber === 1){
+        return chapterOne.startingConversations;
+    } else {
+        return chapterOne.startingConversations
+    }
+}

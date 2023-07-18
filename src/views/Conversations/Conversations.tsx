@@ -4,13 +4,13 @@ import { useNavigation } from '@react-navigation/native';
 import { HeaderTitle } from '@react-navigation/elements';
 import Conversation from '../Conversation/Conversation';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { conversationsDefault } from '../../utils/conversations.utils';
+import { startingConversations } from '../../utils/chapters.utils';
 
 
-const Conversations = () => {
+const Conversations = ({chapter}) => {
   const navigation = useNavigation();
   const [conversationChoosed, setConversationChoosed] = useState()
-  const conversations = conversationsDefault;
+  const conversations = startingConversations(chapter);
 
 
   // Rendu des éléments de la liste de conversations
@@ -32,7 +32,7 @@ const Conversations = () => {
             style={[{ paddingTop: 35 }, {height: 70}] } 
             name="arrow-back-outline"
              size={36} color="black" />
-          <Conversation conversationId={conversationChoosed}></Conversation>
+          <Conversation conversationId={conversationChoosed} chapterConversation={conversations}></Conversation>
         </Modal>
       )
       }
@@ -49,6 +49,7 @@ const Conversations = () => {
 
 const styles = StyleSheet.create({
   container: {
+    textAlign: 'center',
     flex: 1,
     padding: 16,
     backgroundColor: '#ffffff',

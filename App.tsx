@@ -37,7 +37,7 @@ export default function App() {
     } else {
       console.log(narrativeIndications.length)
       console.log('hello')
-      return <Conversations />;
+      return <Conversations chapter={currentChapter}/>;
     }
   };
 
