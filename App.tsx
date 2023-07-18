@@ -5,39 +5,34 @@ import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Conversations from './src/views/Conversations/Conversations';
-import NarativeScreen from './src/components/NarativeScreen'; // Importez votre composant d'écran narratif
-import {narativeIndicationsForChapter} from './src/utils/chapters.utils';
+import NarativeScreen from './src/components/NarativeScreen';
+import { narativeIndicationsForChapter } from './src/utils/chapters.utils';
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-
   const currentChapter = 1;
   const narrativeIndications = narativeIndicationsForChapter(currentChapter);
   const [currentIndication, setCurrentIndication] = useState<string>();
-  const [chapterText, setChapterText] = useState();
-  const [index, setIndex] = useState(0)
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if(index <= narrativeIndications.length){
+    if (index <= narrativeIndications.length) {
       const timer = setInterval(() => {
-        setCurrentIndication((narrativeIndications[index]));
-        setIndex(index+1);
-      }, 1000); // 5000 ms = 5 secondes
+        setCurrentIndication(narrativeIndications[index]);
+        setIndex((prevIndex) => prevIndex + 1);
+      }, 1000); // 1000 ms = 1 second
       return () => {
         clearInterval(timer);
       };
     }
-  }, [index]);
+  }, [index, narrativeIndications]);
 
   const renderChapterScreen = (currentIndication) => {
     if (index <= narrativeIndications.length) {
-      console.log(index);
       return <NarativeScreen currentIndication={currentIndication} />;
     } else {
-      console.log(narrativeIndications.length)
-      console.log('hello')
-      return <Conversations chapter={currentChapter}/>;
+      return <Conversations chapter={currentChapter} />;
     }
   };
 
@@ -49,10 +44,9 @@ export default function App() {
           tabBarStyle: { display: 'none' },
         }}
       >
-        <Tab.Screen
-          name="Home"
-          component={() => renderChapterScreen(currentIndication)}
-        />
+        <Tab.Screen name="Home">
+          {() => renderChapterScreen(currentIndication)}
+        </Tab.Screen>
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Modal } from 'react-native';
 
 const Conversation = ({ conversationId, chapterConversation }) => {
   const conversation = chapterConversation.find(conv => conv.id === conversationId);
-  const [inputText, setInputText] = useState('');
-  const [messages, setMessages] = useState(conversation.messages.reverse());
-  const handleSend = () => {
-    if (inputText.trim() === '') {
-      return;
-    }
+  const [messages, setMessages] = useState(conversation.messages);
+  const [modalChoiceOpen, setModalChoiceOpen] = useState(false);
 
-    const newMessage = { received: false, msg: inputText };
-    setMessages([...messages.reverse(), newMessage]);
-    setInputText('');
+
+  const handleSend = () => {
+    const newMessage = { received: false, msg: 'test' };
+    setMessages([newMessage, ...messages]); // Inverse l'ordre des messages en ajoutant le nouveau message en premier
+  };
+  
+
+  const doChoice = () => {
+    setModalChoiceOpen(true);
+  }
+
+  const closeModal = () => {
+    setModalChoiceOpen(false);
   };
 
   const renderMessage = ({ item }) => (
@@ -33,9 +39,24 @@ const Conversation = ({ conversationId, chapterConversation }) => {
 
   return (
     <View style={styles.container}>
+<Modal visible={modalChoiceOpen} transparent={true} >
+  <TouchableOpacity style={styles.modalContainer} onPressOut={closeModal}>
+    <View style={styles.modalContent}>
+      <FlatList
+        data={['Choix 1', 'Choix 2', 'Choix 3']}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <TouchableOpacity style={styles.choiceItem}>
+            <Text style={styles.choiceText}>{item}</Text>
+          </TouchableOpacity>
+        )}
+      />
+    </View>
+  </TouchableOpacity>
+</Modal>
       <View style={styles.conversationContainer}>
         <FlatList
-          data={messages.reverse()}
+          data={messages}
           keyExtractor={(item, index) => index.toString()}
           renderItem={renderMessage}
           contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
@@ -43,14 +64,16 @@ const Conversation = ({ conversationId, chapterConversation }) => {
         />
       </View>
       <View style={styles.inputContainer}>
+        <TouchableOpacity onPress={doChoice}>
         <TextInput
-          style={styles.textInput}
-          placeholder="Type a message..."
-          value={inputText}
-          onChangeText={setInputText}
+  style={styles.textInput}
+  placeholder="Ecrivez un message..."
+  editable={false}
+  onPressIn={doChoice}
         />
-        <TouchableOpacity onPress={handleSend} style={styles.sendButton}>
-          <Text style={{ color: 'white' }}>Send</Text>
+        </TouchableOpacity>
+        <TouchableOpacity  style={styles.sendButton}>
+          <Text style={{ color: 'white' }}>Envoyer</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -61,6 +84,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingBottom: 35, // Espace entre le bas de la conversation et le bord de l'écran
+  },  
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  blurContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
   },
   conversationContainer: {
     flex: 1,
@@ -82,6 +115,20 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: '#80cbc4',
     borderRadius: 8,
+  },
+
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 16,
+  },
+  choiceItem: {
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  choiceText: {
+    fontSize: 16,
   },
 });
 
