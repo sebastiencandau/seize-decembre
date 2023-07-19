@@ -32,7 +32,7 @@ export default function App() {
     if (index <= narrativeIndications.length) {
       return <NarativeScreen currentIndication={currentIndication} />;
     } else {
-      return <Conversations chapter={currentChapter} />;
+      return <Conversations chapter={currentChapter} playerName={'Sébastien'} />;
     }
   };
 

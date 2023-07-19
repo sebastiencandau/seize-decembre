@@ -2,39 +2,41 @@ import React, { useState, useEffect } from 'react';
 import { Image, View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Modal } from 'react-native';
 import { followingMessage, playerChoices } from '../../utils/chapters.utils';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { IMessage } from '../../interfaces/messages.interface';
 
-const Conversation = ({ contactName, chapterConversation, chapter, closeModal }) => {
+const Conversation = ({ contactName, chapterConversation, chapter, closeModal, playerName }) => {
   const conversation = chapterConversation.find(conv => conv.name === contactName);
   const allChoises = playerChoices(chapter);
-  const [messages, setMessages] = useState(conversation.messages);
+  const [messages, setMessages] = useState<IMessage[]>(conversation.messages);
   const [gameProgress, setGameProgress] = useState(0);
   const [choices, setChoices] = useState<Array<string>>()
   const [modalChoiceOpen, setModalChoiceOpen] = useState(false);
 
 
   useEffect(() => {
+    console.log(choices)
     setChoices(allChoises.one)
   }, []);
 
   useEffect(() => {
-    if (gameProgress > 0) {
-      const receiverMessages = followingMessage(chapter, messages[0].msg);
-      setChoices(receiverMessages.choices);
-      setTimeout(() => {
-        let newMessages = messages
-        receiverMessages.messages.forEach((message) => {
-          console.log(message)
-          newMessages = receiverMessages.type === 'indication' ?
-            [{ received: true, msg: message, type: 'indication' }, ...newMessages] :
-            [{ received: true, msg: message }, ...newMessages];
-        });
-        setMessages(newMessages);
-      }, 3000); // Délai de 3 secondes (3000 millisecondes)
-    }
+    if(gameProgress > 0){
+    const _followingMessage = followingMessage(chapter, messages[0].msg, playerName);
+    console.log(_followingMessage);
+    let newMessages = messages;
+    setTimeout(() => {
+      _followingMessage.messages.forEach((message) => {
+        console.log('msg',message);
+        newMessages.push(message);
+      })
+      setMessages(newMessages.reverse());
+      setChoices(_followingMessage.choices);
+    }, 3000); // Délai de 3 secondes (3000 millisecondes)
+    console.log('a', newMessages);
+  }
   }, [gameProgress]);
 
   const handleSend = (item) => {
-    const newMessage = { received: false, msg: item };
+    const newMessage = { type: null, received: false, msg: item };
     setMessages([newMessage, ...messages]);
 
     setModalChoiceOpen(false); // Exécution immédiate

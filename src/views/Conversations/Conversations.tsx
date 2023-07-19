@@ -7,7 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { startingConversations } from '../../utils/chapters.utils';
 
 
-const Conversations = ({ chapter }) => {
+const Conversations = ({ chapter, playerName }) => {
   const navigation = useNavigation();
   const [conversationChoosed, setConversationChoosed] = useState()
   const conversations = startingConversations(chapter);
@@ -33,6 +33,7 @@ const Conversations = ({ chapter }) => {
         <Modal onRequestClose={closeModal}>
         <Conversation
           contactName={conversationChoosed}
+          playerName={playerName}
           chapterConversation={conversations}
           chapter={chapter}
           closeModal={closeModal} // Pass the closeModal function to the Conversation component

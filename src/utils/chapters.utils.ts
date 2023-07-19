@@ -25,11 +25,11 @@ export const receiverScenario = (chapterNumber) => {
     }
 }
 
-export const followingMessage = (chapterNumber, message) => {
+export const followingMessage = (chapterNumber, message, playerName) => {
     if (chapterNumber === 1) {
-        return chapterOne.followingMessage(message);
+        return chapterOne.followingMessage(message, playerName);
     } else {
-        return chapterOne.followingMessage(message);
+        return chapterOne.followingMessage(message, playerName);
     }
 }
 
