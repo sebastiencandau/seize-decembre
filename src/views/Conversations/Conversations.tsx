@@ -7,7 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { startingConversations } from '../../utils/chapters.utils';
 
 
-const Conversations = ({chapter}) => {
+const Conversations = ({ chapter }) => {
   const navigation = useNavigation();
   const [conversationChoosed, setConversationChoosed] = useState()
   const conversations = startingConversations(chapter);
@@ -25,13 +25,13 @@ const Conversations = ({chapter}) => {
 
   return (
     <View style={styles.container}>
-      { conversationChoosed && (
+      {conversationChoosed && (
         <Modal>
           <Ionicons
-           onPress={() => setConversationChoosed(undefined)}
-            style={[{ paddingTop: 35 }, {height: 70}] } 
+            onPress={() => setConversationChoosed(undefined)}
+            style={[{ paddingTop: 35 }, { height: 70 }]}
             name="arrow-back-outline"
-             size={36} color="black" />
+            size={36} color="black" />
           <Conversation contactName={conversationChoosed} chapterConversation={conversations} chapter={chapter}></Conversation>
         </Modal>
       )

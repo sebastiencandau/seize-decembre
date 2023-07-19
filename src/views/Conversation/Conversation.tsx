@@ -10,34 +10,38 @@ const Conversation = ({ contactName, chapterConversation, chapter }) => {
   const [choices, setChoices] = useState<Array<string>>()
   const [modalChoiceOpen, setModalChoiceOpen] = useState(false);
 
-  
+
   useEffect(() => {
     setChoices(allChoises.one)
   }, []);
 
   useEffect(() => {
-    if(gameProgress > 0){
-    const receiverMessages = followingMessage(chapter, messages[0].msg);
-    console.log(receiverMessages);
-    setChoices(receiverMessages.followingChoices);
-    setTimeout(() => {
-      receiverMessages.followingMessage.forEach((message) => {
-        setMessages([{ received: true, msg: message }, ...messages]);
-      });
-    }, 3000); // Délai de 3 secondes (3000 millisecondes)
-  }
-    }, [gameProgress]);
+    if (gameProgress > 0) {
+      const receiverMessages = followingMessage(chapter, messages[0].msg);
+      setChoices(receiverMessages.choices);
+      setTimeout(() => {
+        let newMessages = messages
+        receiverMessages.messages.forEach((message) => {
+          console.log(message)
+          newMessages = receiverMessages.type === 'indication' ?
+            [{ received: true, msg: message, type: 'indication' }, ...newMessages] :
+            [{ received: true, msg: message }, ...newMessages];
+        });
+        setMessages(newMessages);
+      }, 3000); // Délai de 3 secondes (3000 millisecondes)
+    }
+  }, [gameProgress]);
 
   const handleSend = (item) => {
     const newMessage = { received: false, msg: item };
     setMessages([newMessage, ...messages]);
-    
+
     setModalChoiceOpen(false); // Exécution immédiate
     setGameProgress(gameProgress + 1);
 
 
   };
-  
+
 
   const doChoice = () => {
     setModalChoiceOpen(true);
@@ -64,14 +68,14 @@ const Conversation = ({ contactName, chapterConversation, chapter }) => {
           </View>
         </View>
       ) || (
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 15, marginTop: 15 }}>
-          <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
-          <View>
-            <Text style={{ width: 200, textAlign: 'center' }}>{item.msg}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 15, marginTop: 15 }}>
+            <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
+            <View>
+              <Text style={{ width: 200, textAlign: 'center' }}>{item.msg}</Text>
+            </View>
+            <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
           </View>
-          <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
-        </View>
-      )}
+        )}
     </>
   );
 
