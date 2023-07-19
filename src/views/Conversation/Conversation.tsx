@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Image, View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Modal } from 'react-native';
 import { followingMessage, playerChoices } from '../../utils/chapters.utils';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
-const Conversation = ({ contactName, chapterConversation, chapter }) => {
+const Conversation = ({ contactName, chapterConversation, chapter, closeModal }) => {
   const conversation = chapterConversation.find(conv => conv.name === contactName);
   const allChoises = playerChoices(chapter);
   const [messages, setMessages] = useState(conversation.messages);
@@ -47,8 +48,8 @@ const Conversation = ({ contactName, chapterConversation, chapter }) => {
     setModalChoiceOpen(true);
   };
 
-  const closeModal = () => {
-    setModalChoiceOpen(false);
+  const handleBack = () => {
+    closeModal(); // Call the closeModal function passed from the Conversations component
   };
 
   const renderMessage = ({ item }) => (
@@ -68,7 +69,7 @@ const Conversation = ({ contactName, chapterConversation, chapter }) => {
           </View>
         </View>
       ) || (
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 15, marginTop: 15 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 15 }}>
             <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
             <View>
               <Text style={{ width: 200, textAlign: 'center' }}>{item.msg}</Text>
@@ -82,6 +83,12 @@ const Conversation = ({ contactName, chapterConversation, chapter }) => {
   return (
     <View style={styles.container}>
       <View style={styles.contactNameContainer}>
+      <Ionicons
+            style={[ { height: 50, marginEnd: 10 }]}
+            name="arrow-back-outline"
+            size={36} color="black" 
+            onPress={handleBack}
+            />
         <View style={styles.profilePictureContainer}>
           <Image source={{ uri: conversation.profilePicture }} style={styles.profilePicture} />
         </View>
@@ -108,6 +115,7 @@ const Conversation = ({ contactName, chapterConversation, chapter }) => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={renderMessage}
           contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
+          inverted
         />
       </View>
       <View style={styles.inputContainer}>
@@ -137,14 +145,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
     paddingHorizontal: 16,
+    height: 80,
     paddingVertical: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },
   profilePictureContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 50,
     overflow: 'hidden',
     marginRight: 8,
   },
@@ -154,7 +163,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   contactNameText: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   modalContainer: {

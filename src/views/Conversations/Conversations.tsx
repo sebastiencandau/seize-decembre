@@ -11,7 +11,11 @@ const Conversations = ({ chapter }) => {
   const navigation = useNavigation();
   const [conversationChoosed, setConversationChoosed] = useState()
   const conversations = startingConversations(chapter);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const closeModal = () => {
+    setConversationChoosed(null);
+  };
 
   // Rendu des éléments de la liste de conversations
   const renderItem = ({ item }) => (
@@ -26,14 +30,14 @@ const Conversations = ({ chapter }) => {
   return (
     <View style={styles.container}>
       {conversationChoosed && (
-        <Modal>
-          <Ionicons
-            onPress={() => setConversationChoosed(undefined)}
-            style={[{ paddingTop: 35 }, { height: 70 }]}
-            name="arrow-back-outline"
-            size={36} color="black" />
-          <Conversation contactName={conversationChoosed} chapterConversation={conversations} chapter={chapter}></Conversation>
-        </Modal>
+        <Modal onRequestClose={closeModal}>
+        <Conversation
+          contactName={conversationChoosed}
+          chapterConversation={conversations}
+          chapter={chapter}
+          closeModal={closeModal} // Pass the closeModal function to the Conversation component
+        />
+      </Modal>
       )
       }
       <Text style={styles.title}>Conversations</Text>
@@ -49,6 +53,8 @@ const Conversations = ({ chapter }) => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 20,
+    marginBottom: 20,
     textAlign: 'center',
     flex: 1,
     padding: 16,

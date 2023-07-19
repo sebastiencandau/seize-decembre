@@ -51,7 +51,6 @@ export const followingMessage = (message) => {
     switch (message) {
         case "tu es qui ?":
             return { messages: ["Lucie vous a bloqué", "FIN DU CHAPITRE"], choices: [], type: "indication" }
-            break;
         case "hey :)":
         case "salut":
             return {
@@ -61,6 +60,12 @@ export const followingMessage = (message) => {
                     "je ne sais pas ce qu'il aime",
                     "il aime les films d'animation"
                 ]
+            }
+        case "je ne sais pas ce qu'il aime":
+            return {
+                messages: ["mmh il me semble qu'il a un penchant pour la science fiction... le dernier Matrix te conviendrait ?"],
+                choices: ["oui c'est parfait, j'ai adoré tout les autres et je comptais aller le voir de toute façon",
+                    "je suis pas trop SF mais pour lui je ferai des efforts 😅"]
             }
         case "il aime la science fiction":
             return {
@@ -85,6 +90,66 @@ export const followingMessage = (message) => {
                     "le genre de films qui nous rappellent que notre monde est beau sans qu'on ait à en inventer de nouveaux, moins réalistes"
                 ], choices: ["je comprends, tu es quelqu'un d'assez positive", "j'aime également ce genre de films"]
             }
+        case "je comprends, tu es quelqu'un d'assez positive":
+            return {
+                messages: [
+                    "j'essaye de l'être",
+                    "et toi tu es quelq'un de positif ?"
+                ], choices: ["j'essaye de l'être", "je le suis", "je n'arrive pas à l'être"]
+            }
+        case "j'aime également ce genre de films":
+            return {
+                messages: [
+                    "c'est le genre de films qui nous permets de rester positif",
+                    "tu es quelqu'un de positif ?"
+                ], choices: ["j'essaye de l'être", "je le suis", "je n'arrive pas à l'être"]
+            }
+        case "j'essaye de l'être":
+            return {
+                messages: [
+                    "je pense comme toi aussi",
+                    "personnellement c'est grâce à l'art que j'arrive à mettre de la couleur et du positif sur ce monde"
+                ], choices: ["je vois, je vais aller dormir. Je te souhaite bonne nuit Lucie :)", "tu es une artiste ?"]
+            }
+        case "je le suis":
+        case "je n'arrive pas à l'être":
+            return {
+                messages: ["personnellement c'est grâce à l'art que j'arrive à mettre de la couleur et du positif sur ce monde"]
+                , choices: ["je vois, je vais aller dormir. Je te souhaite bonne nuit Lucie :)", "tu es une artiste ?"]
+            }
+        case "je vois, je vais aller dormir. Je te souhaite bonne nuit Lucie :)":
+            return {
+                messages: ["bonne nuit à toi aussi :)"], choices: []
+            }
+        case "tu es une artiste ?":
+            return {
+                messages: ["ahah si on veut", "je fais du piano", "c'est très apaisant", "est-ce que tu pratiques d'un instrument ?"],
+                choices: ["moi aussi je fais du piano", "je fais du violon", "il m'arrive de dessiner", "je n'aime pas particulièrement l'art"]
+            }
+        case "moi aussi je fais du piano":
+        case "je fais du violon":
+        case "il m'arrive de dessiner":
+            return {
+                messages: ['owh :)', "je sens qu'on va bien s'entendre toi et moi",
+                    "malheureusement je dois te laisser, je commence les cours tôt demain",
+                    "on se voit samedi au ciné :)",
+                    "bonne nuit :))"
+                ],
+                choices: ["bonne nuit à toi aussi :)", "à samedi, j'ai hâte de te voir", "hasta luego"]
+            }
+        case "je n'aime pas particulièrement l'art":
+            return {
+                messages: ['il se fait tard',
+                    "malheureusement je dois te laisser, je commence les cours tôt demain",
+                    "bonne nuit :)"
+                ],
+                choices: ["bonne nuit à toi aussi :)", "à samedi, j'ai hâte de te voir", "hasta luego"]
+            }
+        case "bonne nuit à toi aussi :)":
+        case "à samedi, j'ai hâte de te voir":
+        case "hasta luego":
+            return { messages: ["Lucie s'est déconnectée", "FIN DU CHAPITRE"], choices: [], type: 'indications' }
+
     }
 }
 
