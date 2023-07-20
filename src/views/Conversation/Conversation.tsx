@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image, View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Modal, Dimensions } from 'react-native';
 import { followingMessage, playerChoices } from '../../utils/chapters.utils';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -29,7 +30,7 @@ const Conversation = ({
   }, []);
 
   useEffect(() => {
-    if(localStorage.hasOwnProperty('chapter' + chapter)){
+    if(AsyncStorage.hasOwnProperty('chapter' + chapter)){
       setTimeout(() => {
         closeModal()
     }, 2000); 
@@ -41,15 +42,13 @@ const Conversation = ({
   useEffect(() => {
     if(gameProgress > 0){
     const _followingMessage = followingMessage(chapter, messages[0].msg, playerName);
-    console.log(_followingMessage)
-    if(_followingMessage.messages[messages.length - 1].type){
-      if(_followingMessage.messages[messages.length - 1].type !== 'indication'){
-        console.log('ici');
+    if(_followingMessage.messages[_followingMessage.messages.length - 1].type){
+      if(_followingMessage.messages[_followingMessage.messages.length - 1].type !== 'indication'){
         const newChapter = {
           num: chapter,
-          result: _followingMessage.messages[messages.length - 1].type
+          result: _followingMessage.messages[_followingMessage.messages.length - 1].type
         }
-        localStorage.setItem('chapter' + chapter, JSON.stringify(newChapter));
+        AsyncStorage.setItem('chapter' + chapter, JSON.stringify(newChapter));
       }
     }
     setChoices(_followingMessage.choices);

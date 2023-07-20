@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View,
   Text,
@@ -17,9 +18,9 @@ const Menu = ({ startGame }) => {
     setModalVisible(true);
   };
 
-  const handleStartGame = () => {
-    localStorage.setItem('playerName', playerName);
-    localStorage.removeItem('chapter1');
+  const handleStartGame = async () => {
+    await AsyncStorage.setItem('playerName', playerName);
+    await AsyncStorage.removeItem('chapter1');
     startGame();
   };
 

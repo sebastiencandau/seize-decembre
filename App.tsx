@@ -8,6 +8,7 @@ import NarativeScreen from './src/components/NarativeScreen';
 import { narativeIndicationsForChapter, startingConversation } from './src/utils/chapters.utils';
 import Conversation from './src/views/Conversation/Conversation';
 import Menu from './src/views/Menu/Menu';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Tab = createBottomTabNavigator();
@@ -18,6 +19,7 @@ export default function App() {
   const [currentIndication, setCurrentIndication] = useState<string>();
   const conversationChapter = startingConversation(currentChapter);
   const [index, setIndex] = useState(0);
+  const [playerName, setPlayerName] = useState<string>();
   const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
@@ -40,8 +42,12 @@ export default function App() {
   }
 
 
-  const startGame = () => {
-    setNarrativeIndications(narativeIndicationsForChapter(currentChapter));
+  const startGame = async () => {
+    const name = await AsyncStorage.getItem('playerName');
+    if(name){
+      setPlayerName(name);
+      setNarrativeIndications(narativeIndicationsForChapter(currentChapter));
+    }
   }
 
   const renderChapterScreen = (currentIndication) => {
@@ -54,7 +60,7 @@ export default function App() {
       return        ( <Modal>
       <Conversation
         contactName={conversationChapter.name}
-        playerName={localStorage.getItem('playerName')}
+        playerName={playerName}
         chapterConversation={conversationChapter}
         chapter={currentChapter}
         closeModal={closeModal} // Pass the closeModal function to the Conversation component
