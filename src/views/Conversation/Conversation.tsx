@@ -7,23 +7,51 @@ import { IMessage } from '../../interfaces/messages.interface';
 const screen = Dimensions.get('window');
 const screenWidth = screen.width - 80; 
 
-const Conversation = ({ contactName, chapterConversation, chapter, closeModal, playerName }) => {
-  const conversation = chapterConversation.find(conv => conv.name === contactName);
-  const allChoises = playerChoices(chapter);
+const Conversation = ({
+  contactName,
+  chapterConversation,
+  chapter,
+  closeModal,
+  playerName,
+}) => {
+  const conversation = chapterConversation;
   const [messages, setMessages] = useState<IMessage[]>(conversation.messages);
   const [gameProgress, setGameProgress] = useState(0);
   const [choices, setChoices] = useState<Array<string>>()
   const [modalChoiceOpen, setModalChoiceOpen] = useState(false);
   const [futureMessages, setFutureMessages] = useState<IMessage[]>()
   const [isWritting, setIsWriting] = useState(false);
+  const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
+
 
   useEffect(() => {
-    setChoices(allChoises.one)
+    setChoices(conversation.choices)
   }, []);
+
+  useEffect(() => {
+    if(localStorage.hasOwnProperty('chapter' + chapter)){
+      setTimeout(() => {
+        closeModal()
+    }, 2000); 
+    }
+  }, [messages]);
+
+
 
   useEffect(() => {
     if(gameProgress > 0){
     const _followingMessage = followingMessage(chapter, messages[0].msg, playerName);
+    console.log(_followingMessage)
+    if(_followingMessage.messages[messages.length - 1].type){
+      if(_followingMessage.messages[messages.length - 1].type !== 'indication'){
+        console.log('ici');
+        const newChapter = {
+          num: chapter,
+          result: _followingMessage.messages[messages.length - 1].type
+        }
+        localStorage.setItem('chapter' + chapter, JSON.stringify(newChapter));
+      }
+    }
     setChoices(_followingMessage.choices);
     setFutureMessages(_followingMessage.messages);
   }
@@ -48,7 +76,8 @@ const Conversation = ({ contactName, chapterConversation, chapter, closeModal, p
           setIsWriting(false);
           setFutureMessages(updatedFutureMessages);
       }, 5000); 
-    } else {
+    } 
+    else{
       setTimeout(() => {
         setMessages([futureMessages[0], ...messages]);
         const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
@@ -66,13 +95,13 @@ const Conversation = ({ contactName, chapterConversation, chapter, closeModal, p
     setGameProgress(gameProgress + 1);
   };
 
+  const toggleConfirmationModal = () => {
+    setConfirmationModalVisible(!confirmationModalVisible);
+  };
+
 
   const doChoice = () => {
     setModalChoiceOpen(true);
-  };
-
-  const handleBack = () => {
-    closeModal(); // Call the closeModal function passed from the Conversations component
   };
 
   const closeChoicesModal = () => {
@@ -113,14 +142,28 @@ const Conversation = ({ contactName, chapterConversation, chapter, closeModal, p
       <Ionicons
             style={[ { height: 50, marginEnd: 10 }]}
             name="arrow-back-outline"
-            size={36} color="black" 
-            onPress={handleBack}
+            size={36} color="black"
+            onPress={toggleConfirmationModal} 
             />
         <View style={styles.profilePictureContainer}>
           <Image source={{ uri: conversation.profilePicture }} style={styles.profilePicture} />
         </View>
         <Text style={styles.contactNameText}>{contactName}</Text>
       </View>
+      <Modal visible={confirmationModalVisible} transparent={true}>
+        <TouchableOpacity style={styles.modalContainer} onPressOut={toggleConfirmationModal}>
+          <View style={styles.modalContent}>
+            <Text>Voulez vous retourner au menu principal ?</Text>
+            <Text>Vos choix ne seront pas sauvegardé</Text>
+            <TouchableOpacity onPress={closeModal} style={styles.confirmationButton}>
+              <Text style={styles.confirmationButtonText}>Oui</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={toggleConfirmationModal} style={styles.confirmationButton}>
+              <Text style={styles.confirmationButtonText}>Non</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
       <Modal visible={modalChoiceOpen} transparent={true}>
         <TouchableOpacity style={styles.modalContainer} onPressOut={closeChoicesModal}>
           <View style={styles.modalContent}>
@@ -240,6 +283,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 8,
     padding: 16,
+    maxHeight: 500,
+    width: 300
   },
   choiceItem: {
     paddingVertical: 8,
@@ -248,6 +293,16 @@ const styles = StyleSheet.create({
   },
   choiceText: {
     fontSize: 16,
+  },
+  confirmationButton: {
+    paddingVertical: 8,
+    backgroundColor: '#80cbc4',
+    borderRadius: 8,
+    marginVertical: 4,
+  },
+  confirmationButtonText: {
+    color: 'white',
+    textAlign: 'center',
   },
 });
 

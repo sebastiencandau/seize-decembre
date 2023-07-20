@@ -9,4 +9,5 @@ export interface IConversation {
     name: string,
     profilePicture: string,
     messages: IMessage[]
+    choices: string[]
 }

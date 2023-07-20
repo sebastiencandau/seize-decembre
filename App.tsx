@@ -1,22 +1,27 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Text, View } from 'react-native';
+import { Text, View, Modal } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Conversations from './src/views/Conversations/Conversations';
 import NarativeScreen from './src/components/NarativeScreen';
-import { narativeIndicationsForChapter } from './src/utils/chapters.utils';
+import { narativeIndicationsForChapter, startingConversation } from './src/utils/chapters.utils';
+import Conversation from './src/views/Conversation/Conversation';
+import Menu from './src/views/Menu/Menu';
+
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   const currentChapter = 1;
-  const narrativeIndications = narativeIndicationsForChapter(currentChapter);
+  const [narrativeIndications, setNarrativeIndications] = useState<string[]>(); 
   const [currentIndication, setCurrentIndication] = useState<string>();
+  const conversationChapter = startingConversation(currentChapter);
   const [index, setIndex] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
+    if(narrativeIndications){
     if (index <= narrativeIndications.length) {
       const timer = setInterval(() => {
         setCurrentIndication(narrativeIndications[index]);
@@ -26,13 +31,35 @@ export default function App() {
         clearInterval(timer);
       };
     }
+  }
   }, [index, narrativeIndications]);
 
+  const closeModal = () => {
+    setIndex(0);
+    setNarrativeIndications(undefined);
+  }
+
+
+  const startGame = () => {
+    setNarrativeIndications(narativeIndicationsForChapter(currentChapter));
+  }
+
   const renderChapterScreen = (currentIndication) => {
-    if (index <= narrativeIndications.length) {
+    if(!narrativeIndications) {
+      return <Menu startGame={startGame}></Menu>
+    }
+    else if (index <= narrativeIndications.length) {
       return <NarativeScreen currentIndication={currentIndication} />;
     } else {
-      return <Conversations chapter={currentChapter} playerName={'Sébastien'} />;
+      return        ( <Modal>
+      <Conversation
+        contactName={conversationChapter.name}
+        playerName={localStorage.getItem('playerName')}
+        chapterConversation={conversationChapter}
+        chapter={currentChapter}
+        closeModal={closeModal} // Pass the closeModal function to the Conversation component
+      />
+    </Modal>)
     }
   };
 

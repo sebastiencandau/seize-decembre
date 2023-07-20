@@ -33,10 +33,10 @@ export const followingMessage = (chapterNumber, message, playerName) => {
     }
 }
 
-export const startingConversations = (chapterNumber) => {
+export const startingConversation = (chapterNumber) => {
     if (chapterNumber === 1) {
-        return chapterOne.startingConversations;
+        return chapterOne.startingConversation;
     } else {
-        return chapterOne.startingConversations
+        return chapterOne.startingConversation
     }
 }

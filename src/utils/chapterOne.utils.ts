@@ -53,7 +53,7 @@ export const playerChoices = {
 export const followingMessage = (message, playerName): { messages: IMessage[]; choices: string[] } => {
   switch (message) {
     case "tu es qui ?":
-      return { messages: [{ msg: "Lucie vous a bloqué", type: "indication", received: true }, { msg: "FIN DU CHAPITRE", type: "indication", received: true }], choices: [] };
+      return { messages: [{ msg: "Lucie vous a bloqué", type: "indication", received: true }, { msg: "PERDU", type: "end", received: true }], choices: [] };
     case "hey :)":
     case "salut":
       return {
@@ -86,12 +86,12 @@ export const followingMessage = (message, playerName): { messages: IMessage[]; c
     case "bon, on se voit samedi :) Bonne nuit Lucie":
       return { messages: [{ msg: "bonne nuit à toi aussi :)", type: null, received: true },
       { msg: "Lucie s'est déconnectée", type: 'indication', received: true },
-      { msg: "FIN DE LA PARTIE 1", type: 'indication', received: true },
+      { msg: "FIN DE LA PARTIE 1", type: 'pas_ri', received: true },
     ], choices: [] };
     case "et tu as quelqu'un dans ta vie ? 😉":
       return { messages: [{ msg: "tu dois être fatigué, je pense que je vais aller dormir", type: null, received: true },
       { msg: "Lucie s'est déconnectée", type: 'indication', received: true },
-      { msg: "FIN DE LA PARTIE 1", type: 'indication', received: true },
+      { msg: "FIN DE LA PARTIE 1", type: 'pas_ri', received: true },
     ], choices: [] };
     case "ah oui ? Quels genres de films te plaisent ?":
       return {
@@ -134,7 +134,7 @@ export const followingMessage = (message, playerName): { messages: IMessage[]; c
       return {
         messages: [{ msg: "bonne nuit à toi aussi :)", type: null, received: true }, 
         { msg: "Lucie s'est déconnectée", type: 'indication', received: true },
-        { msg: "FIN DE LA PARTIE 1", type: 'indication', received: true },
+        { msg: "FIN DE LA PARTIE 1", type: 'pas_ri', received: true },
       ], choices: []
       };
     case "tu es une artiste ?":
@@ -168,7 +168,7 @@ export const followingMessage = (message, playerName): { messages: IMessage[]; c
     case "bonne nuit à toi aussi :)":
     case "à samedi, j'ai hâte de te voir":
     case "hasta luego":
-      return { messages: [{ msg: "Lucie s'est déconnectée", type: "indication", received: true }, { msg: "FIN DU CHAPITRE", type: "indication", received: true }], choices: [] };
+      return { messages: [{ msg: "Lucie s'est déconnectée", type: "indication", received: true }, { msg: "FIN DE LA PARTIE 1", type: "ri", received: true }], choices: [] };
 
     default:
       return { messages: [], choices: [] };
@@ -176,16 +176,20 @@ export const followingMessage = (message, playerName): { messages: IMessage[]; c
 };
 
 
-export const startingConversations: IConversation[] = [
+export const startingConversation: IConversation =
     {
         id: 1,
         name: 'Lucie',
         profilePicture: 'https://www.gala.fr/imgre/fit/http.3A.2F.2Fprd2-bone-image.2Es3-website-eu-west-1.2Eamazonaws.2Ecom.2Fgal.2F2020.2F10.2F10.2Fb6dc622e-40b2-4ceb-bc07-f5ba40a644ee.2Ejpeg/420x420/quality/80/focus-point/492%2C210/photos-filip-nikolic-nouvelle-tete-pour-sa-sublime-fille-sasha.jpg',
         messages: [
             { type: null, received: true, msg: `hey :) je me permets de t'envoyer un message parce qu'on comptait organiser un petit truc pour l'anniversaire de Matéo et je sais que vous êtes proches` },
+        ],
+        choices: [
+          "hey :)",
+          "salut",
+          "tu es qui ?",
         ]
-    },
-]
+    }
 
 export const narativeIndications = [
     "Chapitre 1: Lucie",
