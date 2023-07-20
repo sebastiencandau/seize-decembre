@@ -81,12 +81,18 @@ export const followingMessage = (message, playerName): { messages: IMessage[]; c
         messages: [{ msg: "ahah alors tant mieux. Pour ma part je ne suis pas trop SF mais ça me fait plaisir de faire plaisir", type: null, received: true }],
         choices: ["ah oui ? Quels genres de films te plaisent ?", "bon, on se voit samedi :) Bonne nuit Lucie", "et tu as quelqu'un dans ta vie ? 😉"]
       };
-    case "je suis pas trop SF mais pour lui je ferai des efforts 😅":
+    case "je ne suis pas trop SF mais pour lui je ferai des efforts 😅":
       return { messages: [{ msg: "c'est pareil pour moi, au moins on sera deux :)", type: null, received: true }], choices: ["ah oui ? Quels genres de films te plaisent ?", "bon, on se voit samedi :) Bonne nuit Lucie", "et tu as quelqu'un dans ta vie ? 😉"] };
     case "bon, on se voit samedi :) Bonne nuit Lucie":
-      return { messages: [{ msg: "bonne nuit à toi aussi :)", type: null, received: true }], choices: [] };
+      return { messages: [{ msg: "bonne nuit à toi aussi :)", type: null, received: true },
+      { msg: "Lucie s'est déconnectée", type: 'indication', received: true },
+      { msg: "FIN DE LA PARTIE 1", type: 'indication', received: true },
+    ], choices: [] };
     case "et tu as quelqu'un dans ta vie ? 😉":
-      return { messages: [{ msg: "tu dois être fatigué, je pense que je vais aller dormir", type: null, received: true }], choices: [] };
+      return { messages: [{ msg: "tu dois être fatigué, je pense que je vais aller dormir", type: null, received: true },
+      { msg: "Lucie s'est déconnectée", type: 'indication', received: true },
+      { msg: "FIN DE LA PARTIE 1", type: 'indication', received: true },
+    ], choices: [] };
     case "ah oui ? Quels genres de films te plaisent ?":
       return {
         messages: [
@@ -126,7 +132,10 @@ export const followingMessage = (message, playerName): { messages: IMessage[]; c
       };
     case "je vois, je vais aller dormir. Je te souhaite bonne nuit Lucie :)":
       return {
-        messages: [{ msg: "bonne nuit à toi aussi :)", type: null, received: true }], choices: []
+        messages: [{ msg: "bonne nuit à toi aussi :)", type: null, received: true }, 
+        { msg: "Lucie s'est déconnectée", type: 'indication', received: true },
+        { msg: "FIN DE LA PARTIE 1", type: 'indication', received: true },
+      ], choices: []
       };
     case "tu es une artiste ?":
       return {

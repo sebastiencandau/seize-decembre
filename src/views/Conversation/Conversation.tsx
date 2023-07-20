@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Image, View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Modal } from 'react-native';
+import { Image, View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Modal, Dimensions } from 'react-native';
 import { followingMessage, playerChoices } from '../../utils/chapters.utils';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { IMessage } from '../../interfaces/messages.interface';
+
+const screen = Dimensions.get('window');
+const screenWidth = screen.width - 80; 
 
 const Conversation = ({ contactName, chapterConversation, chapter, closeModal, playerName }) => {
   const conversation = chapterConversation.find(conv => conv.name === contactName);
@@ -11,29 +14,49 @@ const Conversation = ({ contactName, chapterConversation, chapter, closeModal, p
   const [gameProgress, setGameProgress] = useState(0);
   const [choices, setChoices] = useState<Array<string>>()
   const [modalChoiceOpen, setModalChoiceOpen] = useState(false);
-
+  const [futureMessages, setFutureMessages] = useState<IMessage[]>()
+  const [isWritting, setIsWriting] = useState(false);
 
   useEffect(() => {
-    console.log(choices)
     setChoices(allChoises.one)
   }, []);
 
   useEffect(() => {
     if(gameProgress > 0){
     const _followingMessage = followingMessage(chapter, messages[0].msg, playerName);
-    console.log(_followingMessage);
-    let newMessages = messages;
-    setTimeout(() => {
-      _followingMessage.messages.forEach((message) => {
-        console.log('msg',message);
-        newMessages.push(message);
-      })
-      setMessages(newMessages.reverse());
-      setChoices(_followingMessage.choices);
-    }, 3000); // Délai de 3 secondes (3000 millisecondes)
-    console.log('a', newMessages);
+    setChoices(_followingMessage.choices);
+    setFutureMessages(_followingMessage.messages);
   }
   }, [gameProgress]);
+
+  useEffect(() => {
+    if(gameProgress > 0 && futureMessages.length>0){
+      /*
+      * Si c'est l'interlocuteur qui envoie un ou plusieurs messages, on time-out entre chaque message de manière 
+      * à donner un effet "est en train d'écrire"
+      */
+      if(futureMessages[0].received && !futureMessages[0].type){
+        setTimeout(() => {
+          setIsWriting(true);
+      }, 2000); 
+      setTimeout(() => {
+          const alo = messages;
+          [...alo, futureMessages[0]];
+
+          setMessages([futureMessages[0], ...messages]);
+          const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
+          setIsWriting(false);
+          setFutureMessages(updatedFutureMessages);
+      }, 5000); 
+    } else {
+      setTimeout(() => {
+        setMessages([futureMessages[0], ...messages]);
+        const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
+        setFutureMessages(updatedFutureMessages);
+    }, 1000); 
+    }
+  }
+  }, [futureMessages]);
 
   const handleSend = (item) => {
     const newMessage = { type: null, received: false, msg: item };
@@ -41,8 +64,6 @@ const Conversation = ({ contactName, chapterConversation, chapter, closeModal, p
 
     setModalChoiceOpen(false); // Exécution immédiate
     setGameProgress(gameProgress + 1);
-
-
   };
 
 
@@ -54,9 +75,13 @@ const Conversation = ({ contactName, chapterConversation, chapter, closeModal, p
     closeModal(); // Call the closeModal function passed from the Conversations component
   };
 
+  const closeChoicesModal = () => {
+    setModalChoiceOpen(false);
+  }
+
   const renderMessage = ({ item }) => (
     <>
-      {!item.type && (
+      {item.type === null && (
         <View style={{ flexDirection: item.received ? 'row' : 'row-reverse' }}>
           <View
             style={{
@@ -97,7 +122,7 @@ const Conversation = ({ contactName, chapterConversation, chapter, closeModal, p
         <Text style={styles.contactNameText}>{contactName}</Text>
       </View>
       <Modal visible={modalChoiceOpen} transparent={true}>
-        <TouchableOpacity style={styles.modalContainer} onPressOut={closeModal}>
+        <TouchableOpacity style={styles.modalContainer} onPressOut={closeChoicesModal}>
           <View style={styles.modalContent}>
             <FlatList
               data={choices}
@@ -119,6 +144,20 @@ const Conversation = ({ contactName, chapterConversation, chapter, closeModal, p
           contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
           inverted
         />
+        { isWritting && 
+          <View style={{ flexDirection: 'row' }}>
+          <View
+            style={{
+              backgroundColor: '#e0e0e0',
+              borderRadius: 8,
+              paddingHorizontal: 12,
+              paddingVertical: 8,
+              margin: 4,
+            }}
+          >
+            <Text>...</Text>
+          </View>
+        </View>}
       </View>
       <View style={styles.inputContainer}>
         <TouchableOpacity onPress={doChoice}>
@@ -179,11 +218,13 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: 'row',
+    width: '100%',
     alignItems: 'center',
     padding: 8,
     backgroundColor: 'white',
   },
   textInput: {
+    width: screenWidth,
     flex: 1,
     borderWidth: 1,
     borderRadius: 8,
