@@ -67,7 +67,7 @@ export default function App() {
       const timer = setInterval(() => {
         setCurrentIndication(narrativeIndications[index]);
         setIndex((prevIndex) => prevIndex + 1);
-      }, 5500); // 1000 ms = 1 second
+      }, 4000); // 1000 ms = 1 second
       return () => {
         clearInterval(timer);
       };
@@ -85,21 +85,28 @@ export default function App() {
     }
   }
 
+  const restartGame = async () => {
+    const name = await AsyncStorage.getItem('playerName');
+    setCurrentChapter(1);
+    if(name){
+      setPlayerName(name);
+      setNarrativeIndications(narativeIndicationsForChapter(1));
+    }
+  }
 
-  const startGame = async (restart ? : boolean) => {
+  const startGame = async () => {
     const name = await AsyncStorage.getItem('playerName');
     console.log(name);
-    console.log(restart);
     console.log(currentChapter);
     if(name){
       setPlayerName(name);
-      setNarrativeIndications(narativeIndicationsForChapter(currentChapter ? currentChapter: 1));
+      setNarrativeIndications(narativeIndicationsForChapter(currentChapter));
     }
   }
 
   const renderChapterScreen = (currentIndication) => {
     if(!narrativeIndications) {
-      return <Menu startGame={startGame} chapter={currentChapter}></Menu>
+      return <Menu startGame={startGame} restartGame={restartGame} chapter={currentChapter}></Menu>
     }
     else if (index <= narrativeIndications.length) {
       return <NarativeScreen currentIndication={currentIndication} />;

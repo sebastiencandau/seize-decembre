@@ -10,14 +10,20 @@ import {
   StyleSheet,
 } from 'react-native';
 
-const Menu = ({ startGame, chapter }) => {
+const Menu = ({ startGame, chapter, restartGame }) => {
   const [playerName, setPlayerName] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [restart, setRestart] = useState(false);
 
   console.log(chapter);
   const handlePress = async () => {
     if(await AsyncStorage.getItem('playerName')){
-      startGame();
+      if(!restart){
+        startGame();
+      } else {
+        console.log('OOOOOOOOOOOOOOOOOOOOOOH')
+        restartGame();
+      }
     } else {
       setModalVisible(true);
     }
@@ -25,6 +31,7 @@ const Menu = ({ startGame, chapter }) => {
 
   const handlePressRestart = async () => {
     await AsyncStorage.clear();
+    setRestart(true);
     handlePress();
   };
 
@@ -32,7 +39,7 @@ const Menu = ({ startGame, chapter }) => {
 
   const handleStartGame = async () => {
     await AsyncStorage.setItem('playerName', playerName);
-    startGame();
+    handlePress();
   };
 
   
