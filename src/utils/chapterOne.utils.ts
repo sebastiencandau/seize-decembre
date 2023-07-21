@@ -146,6 +146,7 @@ export const followingMessage = (message, playerName): { messages: IMessage[]; c
         choices: ["moi aussi je fais du piano", "je fais du violon", "il m'arrive de dessiner", "je n'aime pas particulièrement l'art"]
       };
     case "moi aussi je fais du piano":
+    case "je fais du piano":
     case "je fais du violon":
     case "il m'arrive de dessiner":
       return {
@@ -169,8 +170,14 @@ export const followingMessage = (message, playerName): { messages: IMessage[]; c
     case "à samedi, j'ai hâte de te voir":
     case "hasta luego":
       return { messages: [{ msg: "Lucie s'est déconnectée", type: "indication", received: true }, { msg: "FIN DE LA PARTIE 1", type: "ri", received: true }], choices: [] };
-
-    default:
+    case "il aime les films d'animation":
+      return {messages : [{ msg: "mmh dans ce cas on ira voir le dernier Miyazaki, ça te convient ?", type: null, received: true }], choices: ["parfait, j'adore Miyazaki", "je ne connais pas mais je suis sûr que ce sera bien"]}
+    case "parfait, j'adore Miyazaki":
+      return {messages : [{msg: "on va bien s'entendre alors", type: null, received: true}, {msg: "tu as une âme d'artiste ?", type: null, received: true}], choices: ["je fais du piano", "je fais du violon", "il m'arrive de dessiner"]}
+    case "je ne connais pas mais je suis sûr que ce sera bien":
+      return {messages: [{msg: "si tu as une âme d'artiste, c'est évident que ça te plaira", received: true, type: null}], choices: ["je fais du piano", "je fais du violon", "il m'arrive de dessiner"]}
+    
+      default:
       return { messages: [], choices: [] };
   }
 };

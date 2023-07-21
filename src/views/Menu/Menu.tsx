@@ -14,6 +14,7 @@ const Menu = ({ startGame }) => {
   const [playerName, setPlayerName] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
+
   const handlePress = () => {
     setModalVisible(true);
   };

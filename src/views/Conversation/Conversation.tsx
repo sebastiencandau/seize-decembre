@@ -4,6 +4,7 @@ import { Image, View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, M
 import { followingMessage, playerChoices } from '../../utils/chapters.utils';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { IConversation, IMessage } from '../../interfaces/messages.interface';
+import { Audio } from 'expo-av';
 
 const screen = Dimensions.get('window');
 const screenWidth = screen.width - 80; 
@@ -23,8 +24,35 @@ const Conversation = ({
   const [futureMessages, setFutureMessages] = useState<IMessage[]>([])
   const [isWritting, setIsWriting] = useState(false);
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
+  const [receiveMessageSound, setReceiveMessageSound] = useState<Audio.Sound>();
+  const [isWritingSound, setIsWritingSound] = useState<Audio.Sound>();
+
+
+  const initSounds = async () => {
+    const _receiveMessageSound = await Audio.Sound.createAsync( require('../../../assets/musics/receive_message.mp3'));
+    const _isWritingSound = await Audio.Sound.createAsync( require('../../../assets/musics/typing.mp3'));
+    setReceiveMessageSound(_receiveMessageSound.sound);
+    setIsWritingSound(_isWritingSound.sound);
+  }
+
+  const stopPlayIsWrittingSound = async () => {
+    await isWritingSound.stopAsync();
+  }
+
+  const stopPlayReceiveMessageSound = async () => {
+    await receiveMessageSound.stopAsync();
+  }
+
+  const playIsWrittingSound = async () => {
+    await isWritingSound.playAsync();
+  }
+  
+  const playReceiveMessageSound = async () => {
+    await receiveMessageSound.playAsync();
+  }
 
   useEffect(() => {
+    initSounds();
     setChoices(conversation.choices);
     setFutureMessages(conversation.messages);
   }, []);
@@ -64,15 +92,18 @@ const Conversation = ({
       */
       if(futureMessages[0].received && !futureMessages[0].type){
         setTimeout(() => {
+          playIsWrittingSound();
           setIsWriting(true);
       }, 2000); 
+      stopPlayIsWrittingSound();
       setTimeout(() => {
-
+        playReceiveMessageSound()
           setMessages([futureMessages[0], ...messages]);
           const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
           setIsWriting(false);
           setFutureMessages(updatedFutureMessages);
       }, 5000); 
+      stopPlayReceiveMessageSound()
     } 
     else{
       setTimeout(() => {
@@ -112,13 +143,21 @@ const Conversation = ({
           <View
             style={{
               backgroundColor: item.received ? '#e0e0e0' : '#80cbc4',
-              borderRadius: 8,
-              paddingHorizontal: 12,
-              paddingVertical: 8,
+              borderRadius: 50,
+              paddingHorizontal: 20,
+              paddingVertical: 12,
               margin: 4,
             }}
           >
-            <Text>{item.msg}</Text>
+<Text
+  style={{
+    color: item.received ? 'black' : 'white',
+    fontSize: 15,
+    fontStyle: 'normal',
+  }}
+>
+  {item.msg}
+</Text>
           </View>
         </View>
       ) || (
@@ -189,7 +228,7 @@ const Conversation = ({
           <View
             style={{
               backgroundColor: '#e0e0e0',
-              borderRadius: 8,
+              borderRadius: 50,
               paddingHorizontal: 12,
               paddingVertical: 8,
               margin: 4,

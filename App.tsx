@@ -9,6 +9,8 @@ import { narativeIndicationsForChapter, startingConversation } from './src/utils
 import Conversation from './src/views/Conversation/Conversation';
 import Menu from './src/views/Menu/Menu';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Audio } from 'expo-av';
+
 
 
 const Tab = createBottomTabNavigator();
@@ -21,6 +23,32 @@ export default function App() {
   const [index, setIndex] = useState(0);
   const [playerName, setPlayerName] = useState<string>();
   const [gameStarted, setGameStarted] = useState(false);
+  const [backgroundMusic, setBackgroundMusic] = useState<Audio.Sound>();
+
+  async function initBackgroundMusic() {
+    console.log('Loading Sound');
+    const { sound } = await Audio.Sound.createAsync( require('./assets/musics/max_and_chloe.mp3'));
+
+    setBackgroundMusic(sound);
+  }
+
+  const playMusic = async () => {
+    await backgroundMusic!.playAsync();
+  }
+
+  const stopMusic = async () => {
+    await backgroundMusic!.stopAsync();
+  }
+
+  React.useEffect(() => {
+    initBackgroundMusic();
+  }, []);
+
+  React.useEffect(() => {
+    if(backgroundMusic){
+      playMusic();
+    }
+  }, [backgroundMusic]);
 
   useEffect(() => {
     if(narrativeIndications){
@@ -28,7 +56,7 @@ export default function App() {
       const timer = setInterval(() => {
         setCurrentIndication(narrativeIndications[index]);
         setIndex((prevIndex) => prevIndex + 1);
-      }, 5000); // 1000 ms = 1 second
+      }, 1000); // 1000 ms = 1 second
       return () => {
         clearInterval(timer);
       };
@@ -57,6 +85,7 @@ export default function App() {
     else if (index <= narrativeIndications.length) {
       return <NarativeScreen currentIndication={currentIndication} />;
     } else {
+      stopMusic();
       return        ( <Modal>
       <Conversation
         contactName={conversationChapter.name}
