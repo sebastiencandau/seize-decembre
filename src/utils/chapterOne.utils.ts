@@ -182,6 +182,7 @@ export const startingConversation: IConversation =
         name: 'Lucie',
         profilePicture: 'https://www.gala.fr/imgre/fit/http.3A.2F.2Fprd2-bone-image.2Es3-website-eu-west-1.2Eamazonaws.2Ecom.2Fgal.2F2020.2F10.2F10.2Fb6dc622e-40b2-4ceb-bc07-f5ba40a644ee.2Ejpeg/420x420/quality/80/focus-point/492%2C210/photos-filip-nikolic-nouvelle-tete-pour-sa-sublime-fille-sasha.jpg',
         messages: [
+            { type: 'indication', received: true, msg: `Lucie vous a ajouté en ami` },
             { type: null, received: true, msg: `hey :) je me permets de t'envoyer un message parce qu'on comptait organiser un petit truc pour l'anniversaire de Matéo et je sais que vous êtes proches` },
         ],
         choices: [

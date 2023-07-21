@@ -28,7 +28,7 @@ export default function App() {
       const timer = setInterval(() => {
         setCurrentIndication(narrativeIndications[index]);
         setIndex((prevIndex) => prevIndex + 1);
-      }, 1000); // 1000 ms = 1 second
+      }, 5000); // 1000 ms = 1 second
       return () => {
         clearInterval(timer);
       };

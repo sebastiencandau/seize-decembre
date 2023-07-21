@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image, View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Modal, Dimensions } from 'react-native';
 import { followingMessage, playerChoices } from '../../utils/chapters.utils';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { IMessage } from '../../interfaces/messages.interface';
+import { IConversation, IMessage } from '../../interfaces/messages.interface';
 
 const screen = Dimensions.get('window');
 const screenWidth = screen.width - 80; 
@@ -15,18 +15,18 @@ const Conversation = ({
   closeModal,
   playerName,
 }) => {
-  const conversation = chapterConversation;
-  const [messages, setMessages] = useState<IMessage[]>(conversation.messages);
+  const conversation: IConversation = chapterConversation;
+  const [messages, setMessages] = useState<IMessage[]>([]);
   const [gameProgress, setGameProgress] = useState(0);
   const [choices, setChoices] = useState<Array<string>>()
   const [modalChoiceOpen, setModalChoiceOpen] = useState(false);
-  const [futureMessages, setFutureMessages] = useState<IMessage[]>()
+  const [futureMessages, setFutureMessages] = useState<IMessage[]>([])
   const [isWritting, setIsWriting] = useState(false);
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
 
-
   useEffect(() => {
-    setChoices(conversation.choices)
+    setChoices(conversation.choices);
+    setFutureMessages(conversation.messages);
   }, []);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const Conversation = ({
   }, [gameProgress]);
 
   useEffect(() => {
-    if(gameProgress > 0 && futureMessages.length>0){
+    if(futureMessages.length>0){
       /*
       * Si c'est l'interlocuteur qui envoie un ou plusieurs messages, on time-out entre chaque message de manière 
       * à donner un effet "est en train d'écrire"
@@ -67,8 +67,6 @@ const Conversation = ({
           setIsWriting(true);
       }, 2000); 
       setTimeout(() => {
-          const alo = messages;
-          [...alo, futureMessages[0]];
 
           setMessages([futureMessages[0], ...messages]);
           const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
