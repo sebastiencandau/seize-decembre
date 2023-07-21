@@ -16,7 +16,7 @@ import { Audio } from 'expo-av';
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const currentChapter = 1;
+  const [currentChapter, setCurrentChapter] = useState<number>();
   const [narrativeIndications, setNarrativeIndications] = useState<string[]>(); 
   const [currentIndication, setCurrentIndication] = useState<string>();
   const conversationChapter = startingConversation(currentChapter);
@@ -25,11 +25,22 @@ export default function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [backgroundMusic, setBackgroundMusic] = useState<Audio.Sound>();
 
-  async function initBackgroundMusic() {
-    console.log('Loading Sound');
+  async function setUpGame() {
+    console.log('test')
+    // set music
     const { sound } = await Audio.Sound.createAsync( require('./assets/musics/max_and_chloe.mp3'));
-
     setBackgroundMusic(sound);
+
+    if(await localStorage.getItem('chapter')){
+    console.log('test')
+      if(JSON.parse(await localStorage.getItem('chapter')!).result !== "loser"){
+        console.log('a')
+        setCurrentChapter(JSON.parse(await localStorage.getItem('chapter')!).num)
+      }
+    } else {
+      setCurrentChapter(1);
+    }
+    console.log('tata')
   }
 
   const playMusic = async () => {
@@ -41,7 +52,7 @@ export default function App() {
   }
 
   React.useEffect(() => {
-    initBackgroundMusic();
+    setUpGame();
   }, []);
 
   React.useEffect(() => {
@@ -56,7 +67,7 @@ export default function App() {
       const timer = setInterval(() => {
         setCurrentIndication(narrativeIndications[index]);
         setIndex((prevIndex) => prevIndex + 1);
-      }, 1000); // 1000 ms = 1 second
+      }, 5500); // 1000 ms = 1 second
       return () => {
         clearInterval(timer);
       };
@@ -64,23 +75,31 @@ export default function App() {
   }
   }, [index, narrativeIndications]);
 
-  const closeModal = () => {
+  const closeModal = async () => {
     setIndex(0);
     setNarrativeIndications(undefined);
+    if(await localStorage.getItem('chapter')){
+      if(JSON.parse(await localStorage.getItem('chapter')!).result !== "loser"){
+        setCurrentChapter(JSON.parse(await localStorage.getItem('chapter')!).num)
+      }
+    }
   }
 
 
-  const startGame = async () => {
+  const startGame = async (restart ? : boolean) => {
     const name = await AsyncStorage.getItem('playerName');
+    console.log(name);
+    console.log(restart);
+    console.log(currentChapter);
     if(name){
       setPlayerName(name);
-      setNarrativeIndications(narativeIndicationsForChapter(currentChapter));
+      setNarrativeIndications(narativeIndicationsForChapter(currentChapter ? currentChapter: 1));
     }
   }
 
   const renderChapterScreen = (currentIndication) => {
     if(!narrativeIndications) {
-      return <Menu startGame={startGame}></Menu>
+      return <Menu startGame={startGame} chapter={currentChapter}></Menu>
     }
     else if (index <= narrativeIndications.length) {
       return <NarativeScreen currentIndication={currentIndication} />;

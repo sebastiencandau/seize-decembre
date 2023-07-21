@@ -10,20 +10,32 @@ import {
   StyleSheet,
 } from 'react-native';
 
-const Menu = ({ startGame }) => {
+const Menu = ({ startGame, chapter }) => {
   const [playerName, setPlayerName] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
-
-  const handlePress = () => {
-    setModalVisible(true);
+  console.log(chapter);
+  const handlePress = async () => {
+    if(await AsyncStorage.getItem('playerName')){
+      startGame();
+    } else {
+      setModalVisible(true);
+    }
   };
+
+  const handlePressRestart = async () => {
+    await AsyncStorage.clear();
+    handlePress();
+  };
+
+
 
   const handleStartGame = async () => {
     await AsyncStorage.setItem('playerName', playerName);
-    await AsyncStorage.removeItem('chapter1');
     startGame();
   };
+
+  
 
   return (
     <ImageBackground
@@ -36,7 +48,10 @@ const Menu = ({ startGame }) => {
       <View style={styles.container}>
         <Text style={styles.title}>Seize décembre</Text>
         <TouchableOpacity onPress={handlePress} style={styles.button}>
-          <Text style={styles.buttonText}>Commencer</Text>
+          <Text style={styles.buttonText}>{chapter === 1 ? 'Commencer': 'Continuer'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handlePressRestart} style={styles.button}>
+          <Text style={styles.buttonText}>Recommencer</Text>
         </TouchableOpacity>
       </View>
 
@@ -94,6 +109,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
     padding: 10,
+    marginTop: 20,
     borderRadius: 5,
   },
   buttonText: {

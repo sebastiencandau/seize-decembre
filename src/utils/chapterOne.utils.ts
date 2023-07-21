@@ -53,7 +53,7 @@ export const playerChoices = {
 export const followingMessage = (message, playerName): { messages: IMessage[]; choices: string[] } => {
   switch (message) {
     case "tu es qui ?":
-      return { messages: [{ msg: "Lucie vous a bloqué", type: "indication", received: true }, { msg: "PERDU", type: "end", received: true }], choices: [] };
+      return { messages: [{ msg: "Lucie vous a bloqué", type: "indication", received: true }, { msg: "PERDU", type: "loser", received: true }], choices: [] };
     case "hey :)":
     case "salut":
       return {
@@ -201,6 +201,7 @@ export const startingConversation: IConversation =
 
 export const narativeIndications = [
     "Chapitre 1: Lucie",
+    "Partie 1",
     "Lucie est une fille de votre lycée",
     "Elle n'est pas dans votre classe mais vous partagez un ami en commun, Matéo.",
     "Vous ne lui avez encore jamais parlé tout les deux. Un beau jour vous recevez une demande en ami..."

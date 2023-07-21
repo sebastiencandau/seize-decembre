@@ -57,12 +57,27 @@ const Conversation = ({
     setFutureMessages(conversation.messages);
   }, []);
 
-  useEffect(() => {
-    if(AsyncStorage.hasOwnProperty('chapter' + chapter)){
-      setTimeout(() => {
-        closeModal()
-    }, 2000); 
+  const isEnding = async () => {
+    if(messages.length>0){
+      if(messages[0].type){
+        if(messages[0].type !== 'indication'){
+          console.log(chapter)
+          const newChapter = {
+            num: chapter + 1,
+            result: messages[0].type
+          }
+          await AsyncStorage.setItem('chapter', JSON.stringify(newChapter));
+            console.log('b');
+            setTimeout(() => {
+              closeModal();
+          }, 2000);
+        }
+      }
     }
+  }
+
+  useEffect(() => {
+    isEnding();
   }, [messages]);
 
 
@@ -70,15 +85,6 @@ const Conversation = ({
   useEffect(() => {
     if(gameProgress > 0){
     const _followingMessage = followingMessage(chapter, messages[0].msg, playerName);
-    if(_followingMessage.messages[_followingMessage.messages.length - 1].type){
-      if(_followingMessage.messages[_followingMessage.messages.length - 1].type !== 'indication'){
-        const newChapter = {
-          num: chapter,
-          result: _followingMessage.messages[_followingMessage.messages.length - 1].type
-        }
-        AsyncStorage.setItem('chapter' + chapter, JSON.stringify(newChapter));
-      }
-    }
     setChoices(_followingMessage.choices);
     setFutureMessages(_followingMessage.messages);
   }
@@ -90,6 +96,8 @@ const Conversation = ({
       * Si c'est l'interlocuteur qui envoie un ou plusieurs messages, on time-out entre chaque message de manière 
       * à donner un effet "est en train d'écrire"
       */
+
+      // message reçu par quelqu'un
       if(futureMessages[0].received && !futureMessages[0].type){
         setTimeout(() => {
           playIsWrittingSound();
@@ -105,6 +113,7 @@ const Conversation = ({
       }, 5000); 
       stopPlayReceiveMessageSound()
     } 
+    // message envoyé ou indication
     else{
       setTimeout(() => {
         setMessages([futureMessages[0], ...messages]);
@@ -190,7 +199,7 @@ const Conversation = ({
         <TouchableOpacity style={styles.modalContainer} onPressOut={toggleConfirmationModal}>
           <View style={styles.modalContent}>
             <Text>Voulez vous retourner au menu principal ?</Text>
-            <Text>Vos choix ne seront pas sauvegardé</Text>
+            <Text>la partie {chapter} ne sera pas sauvegardée</Text>
             <TouchableOpacity onPress={closeModal} style={styles.confirmationButton}>
               <Text style={styles.confirmationButtonText}>Oui</Text>
             </TouchableOpacity>
