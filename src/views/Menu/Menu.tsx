@@ -21,7 +21,6 @@ const Menu = ({ startGame, chapter, restartGame }) => {
       if(!restart){
         startGame();
       } else {
-        console.log('OOOOOOOOOOOOOOOOOOOOOOH')
         restartGame();
       }
     } else {

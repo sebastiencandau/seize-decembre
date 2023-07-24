@@ -67,7 +67,6 @@ const Conversation = ({
             result: messages[0].type
           }
           await AsyncStorage.setItem('chapter', JSON.stringify(newChapter));
-            console.log('b');
             setTimeout(() => {
               closeModal();
           }, 2000);

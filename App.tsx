@@ -26,21 +26,22 @@ export default function App() {
   const [backgroundMusic, setBackgroundMusic] = useState<Audio.Sound>();
 
   async function setUpGame() {
-    console.log('test')
     // set music
     const { sound } = await Audio.Sound.createAsync( require('./assets/musics/max_and_chloe.mp3'));
     setBackgroundMusic(sound);
 
-    if(await localStorage.getItem('chapter')){
-    console.log('test')
-      if(JSON.parse(await localStorage.getItem('chapter')!).result !== "loser"){
-        console.log('a')
-        setCurrentChapter(JSON.parse(await localStorage.getItem('chapter')!).num)
+    if(await AsyncStorage.getItem('chapter')){
+    const chapter = await AsyncStorage.getItem('chapter');
+    if(chapter){
+      if(JSON.parse(chapter).result !== "loser"){
+        setCurrentChapter(JSON.parse(chapter).num)
+      } else {
+        setCurrentChapter(1);
       }
     } else {
       setCurrentChapter(1);
     }
-    console.log('tata')
+    }
   }
 
   const playMusic = async () => {
@@ -78,11 +79,8 @@ export default function App() {
   const closeModal = async () => {
     setIndex(0);
     setNarrativeIndications(undefined);
-    if(await localStorage.getItem('chapter')){
-      if(JSON.parse(await localStorage.getItem('chapter')!).result !== "loser"){
-        setCurrentChapter(JSON.parse(await localStorage.getItem('chapter')!).num)
-      }
-    }
+    stopMusic();
+    setUpGame();
   }
 
   const restartGame = async () => {
@@ -96,10 +94,10 @@ export default function App() {
 
   const startGame = async () => {
     const name = await AsyncStorage.getItem('playerName');
-    console.log(name);
     console.log(currentChapter);
     if(name){
       setPlayerName(name);
+
       setNarrativeIndications(narativeIndicationsForChapter(currentChapter));
     }
   }
@@ -112,15 +110,14 @@ export default function App() {
       return <NarativeScreen currentIndication={currentIndication} />;
     } else {
       stopMusic();
-      return        ( <Modal>
+      return        (
       <Conversation
         contactName={conversationChapter.name}
         playerName={playerName}
         chapterConversation={conversationChapter}
         chapter={currentChapter}
         closeModal={closeModal} // Pass the closeModal function to the Conversation component
-      />
-    </Modal>)
+      />)
     }
   };
 
