@@ -30,7 +30,7 @@ export const followingMessage = (message, playerName) => {
                 messages: [
                     { msg: "merci pour la soirée, c'était une bonne idée", type: null, received: false },
                     { msg: "Matéo était ravi", type: null, received: false },
-                    { msg: `hey ${playerName} :)`, type: null, received: true },
+                    { msg: `hey  :)`, type: null, received: true },
                     { msg: "j'ai vu ça, j'ai passé une superbe soirée aussi ! Tu m'as bien faite rire", type: null, received: true },
                     { msg: "même si tu n'es pas très bavard", type: null, received: true },
                     { msg: "(ce n'est pas un reproche)", type: null, received: true },
@@ -44,7 +44,7 @@ export const followingMessage = (message, playerName) => {
             return {
                 messages: [
                     {
-                        msg: "hey Sébastien, merci pour la soirée samedi. J'ai bien rigolé :)",
+                        msg: `hey ${playerName}, merci pour la soirée samedi. J'ai bien rigolé :)`,
                         type: null,
                         received: true
                     }
@@ -337,7 +337,7 @@ export const followingMessage = (message, playerName) => {
                         received: true
                     },
                     {
-                        msg: "à plus tard Sébastien 😊",
+                        msg: `à plus tard ${playerName} 😊`,
                         type: null,
                         received: true
                     }
@@ -367,7 +367,7 @@ export const followingMessage = (message, playerName) => {
                         received: true
                     },
                     {
-                        msg: "à plus tard Sébastien 😊",
+                        msg: `à plus tard ${playerName} 😊`,
                         type: null,
                         received: true
                     }
@@ -475,7 +475,7 @@ export const followingMessage = (message, playerName) => {
                         received: true
                     },
                     {
-                        msg: "je pense que tu es quelqu'un de bien Sébastien",
+                        msg: `je pense que tu es quelqu'un de bien ${playerName}`,
                         type: null,
                         received: true
                     }
@@ -505,7 +505,7 @@ export const followingMessage = (message, playerName) => {
                         received: true
                     },
                     {
-                        msg: "à plus tard Sébastien   😊",
+                        msg: `à plus tard ${playerName}   😊`,
                         type: null,
                         received: true
                     }
@@ -534,7 +534,7 @@ export const followingMessage = (message, playerName) => {
             return {
                 messages: [
                     {
-                        msg: "je pense que tu es quelqu'un de bien Sébastien",
+                        msg: `je pense que tu es quelqu'un de bien ${playerName}`,
                         type: null,
                         received: true
                     }
@@ -650,7 +650,7 @@ export const followingMessage = (message, playerName) => {
                         received: true
                     },
                     {
-                        msg: "je pense que tu es quelqu'un de bien Sébastien",
+                        msg: `je pense que tu es quelqu'un de bien ${playerName}`,
                         type: null,
                         received: true
                     }
@@ -669,7 +669,7 @@ export const followingMessage = (message, playerName) => {
                         received: false
                     },
                     {
-                        msg: "je pense que tu es quelqu'un de bien Sébastien",
+                        msg: `je pense que tu es quelqu'un de bien ${playerName}`,
                         type: null,
                         received: true
                     }
@@ -688,7 +688,7 @@ export const followingMessage = (message, playerName) => {
                         received: true
                     },
                     {
-                        msg: "à plus tard Sébastien   😊",
+                        msg: `à plus tard ${playerName}   😊`,
                         type: null,
                         received: true
                     }
@@ -713,7 +713,7 @@ export const followingMessage = (message, playerName) => {
                         received: true
                     },
                     {
-                        msg: "à plus tard Sébastien   😊",
+                        msg: `à plus tard ${playerName}   😊`,
                         type: null,
                         received: true
                     }
@@ -912,7 +912,7 @@ export const followingMessage = (message, playerName) => {
                         received: true
                     },
                     {
-                        msg: "à plus tard Sébastien   😊",
+                        msg: `à plus tard ${playerName}   😊`,
                         type: null,
                         received: true
                     }
