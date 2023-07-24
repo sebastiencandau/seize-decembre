@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Image, View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Modal, Dimensions } from 'react-native';
+import { Image, View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Modal, Dimensions, TouchableHighlight, Linking } from 'react-native';
 import { followingMessage, playerChoices } from '../../utils/chapters.utils';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { IConversation, IMessage } from '../../interfaces/messages.interface';
 import { Audio } from 'expo-av';
+import { Link } from '@react-navigation/native';
 
 const screen = Dimensions.get('window');
-const screenWidth = screen.width - 80; 
+const screenWidth = screen.width - 80;
 
 const Conversation = ({
   contactName,
@@ -29,8 +30,8 @@ const Conversation = ({
 
 
   const initSounds = async () => {
-    const _receiveMessageSound = await Audio.Sound.createAsync( require('../../../assets/musics/receive_message.mp3'));
-    const _isWritingSound = await Audio.Sound.createAsync( require('../../../assets/musics/typing.mp3'));
+    const _receiveMessageSound = await Audio.Sound.createAsync(require('../../../assets/musics/receive_message.mp3'));
+    const _isWritingSound = await Audio.Sound.createAsync(require('../../../assets/musics/typing.mp3'));
     setReceiveMessageSound(_receiveMessageSound.sound);
     setIsWritingSound(_isWritingSound.sound);
   }
@@ -46,7 +47,7 @@ const Conversation = ({
   const playIsWrittingSound = async () => {
     await isWritingSound.playAsync();
   }
-  
+
   const playReceiveMessageSound = async () => {
     await receiveMessageSound.playAsync();
   }
@@ -58,18 +59,20 @@ const Conversation = ({
   }, []);
 
   const isEnding = async () => {
-    if(messages.length>0){
-      if(messages[0].type){
-        if(messages[0].type !== 'indication'){
-          console.log(chapter)
-          const newChapter = {
-            num: chapter + 1,
-            result: messages[0].type
-          }
-          await AsyncStorage.setItem('chapter', JSON.stringify(newChapter));
+    if (messages.length > 0) {
+      if (messages[0].type !== null) {
+        if (messages[0].type !== 'indication') {
+          if(messages[0].type !== 'link'){
+            console.log(chapter)
+            const newChapter = {
+              num: chapter + 1,
+              result: messages[0].type
+            }
+            await AsyncStorage.setItem('chapter', JSON.stringify(newChapter));
             setTimeout(() => {
               closeModal();
-          }, 2000);
+            }, 2000);
+          }
         }
       }
     }
@@ -82,45 +85,45 @@ const Conversation = ({
 
 
   useEffect(() => {
-    if(gameProgress > 0){
-    const _followingMessage = followingMessage(chapter, messages[0].msg, playerName);
-    setChoices(_followingMessage.choices);
-    setFutureMessages(_followingMessage.messages);
-  }
+    if (gameProgress > 0) {
+      const _followingMessage = followingMessage(chapter, messages[0].msg, playerName);
+      setChoices(_followingMessage.choices);
+      setFutureMessages(_followingMessage.messages);
+    }
   }, [gameProgress]);
 
   useEffect(() => {
-    if(futureMessages.length>0){
+    if (futureMessages.length > 0) {
       /*
       * Si c'est l'interlocuteur qui envoie un ou plusieurs messages, on time-out entre chaque message de manière 
       * à donner un effet "est en train d'écrire"
       */
 
       // message reçu par quelqu'un
-      if(futureMessages[0].received && !futureMessages[0].type){
+      if (futureMessages[0].received && !futureMessages[0].type) {
         setTimeout(() => {
           playIsWrittingSound();
           setIsWriting(true);
-      }, 2000); 
-      stopPlayIsWrittingSound();
-      setTimeout(() => {
-        playReceiveMessageSound()
+        }, 2000);
+        stopPlayIsWrittingSound();
+        setTimeout(() => {
+          playReceiveMessageSound()
           setMessages([futureMessages[0], ...messages]);
           const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
           setIsWriting(false);
           setFutureMessages(updatedFutureMessages);
-      }, 5000); 
-      stopPlayReceiveMessageSound()
-    } 
-    // message envoyé ou indication
-    else{
-      setTimeout(() => {
-        setMessages([futureMessages[0], ...messages]);
-        const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
-        setFutureMessages(updatedFutureMessages);
-    }, 1000); 
+        }, 5000);
+        stopPlayReceiveMessageSound()
+      }
+      // message envoyé ou indication
+      else {
+        setTimeout(() => {
+          setMessages([futureMessages[0], ...messages]);
+          const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
+          setFutureMessages(updatedFutureMessages);
+        }, 1000);
+      }
     }
-  }
   }, [futureMessages]);
 
   const handleSend = (item) => {
@@ -157,18 +160,44 @@ const Conversation = ({
               margin: 4,
             }}
           >
-<Text
-  style={{
-    color: item.received ? 'black' : 'white',
-    fontSize: 15,
-    fontStyle: 'normal',
-  }}
->
-  {item.msg}
-</Text>
+            <Text
+              style={{
+                color: item.received ? 'black' : 'white',
+                fontSize: 15,
+                fontStyle: 'normal',
+              }}
+            >
+              {item.msg}
+            </Text>
           </View>
         </View>
-      ) || (
+      ) || item.type === 'link' &&
+      (
+        <View style={{ flexDirection: item.received ? 'row' : 'row-reverse' }}>
+          <View
+            style={{
+              backgroundColor: item.received ? '#e0e0e0' : '#80cbc4',
+              borderRadius: 50,
+              paddingHorizontal: 20,
+              paddingVertical: 12,
+              margin: 4,
+            }}
+          >
+             <TouchableHighlight onPress={() => {Linking.openURL(item.msg);}}>
+            <Text
+              style={{
+                color: item.received ? 'black' : 'white',
+                fontSize: 15,
+                fontStyle: 'normal',
+              }}
+            >
+              {item.msg}
+            </Text></TouchableHighlight>
+          </View>
+        </View>
+      ) ||
+      
+      (
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 15 }}>
             <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
             <View>
@@ -183,12 +212,12 @@ const Conversation = ({
   return (
     <View style={styles.container}>
       <View style={styles.contactNameContainer}>
-      <Ionicons
-            style={[ { height: 50, marginEnd: 10 }]}
-            name="arrow-back-outline"
-            size={36} color="black"
-            onPress={toggleConfirmationModal} 
-            />
+        <Ionicons
+          style={[{ height: 50, marginEnd: 10 }]}
+          name="arrow-back-outline"
+          size={36} color="black"
+          onPress={toggleConfirmationModal}
+        />
         <View style={styles.profilePictureContainer}>
           <Image source={{ uri: conversation.profilePicture }} style={styles.profilePicture} />
         </View>
@@ -231,20 +260,20 @@ const Conversation = ({
           contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
           inverted
         />
-        { isWritting && 
+        {isWritting &&
           <View style={{ flexDirection: 'row' }}>
-          <View
-            style={{
-              backgroundColor: '#e0e0e0',
-              borderRadius: 50,
-              paddingHorizontal: 12,
-              paddingVertical: 8,
-              margin: 4,
-            }}
-          >
-            <Text>...</Text>
-          </View>
-        </View>}
+            <View
+              style={{
+                backgroundColor: '#e0e0e0',
+                borderRadius: 50,
+                paddingHorizontal: 12,
+                paddingVertical: 8,
+                margin: 4,
+              }}
+            >
+              <Text>...</Text>
+            </View>
+          </View>}
       </View>
       <View style={styles.inputContainer}>
         <TouchableOpacity onPress={doChoice}>

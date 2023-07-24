@@ -736,11 +736,11 @@ export const followingMessage = (message, playerName) => {
                 ],
                 choices: [
                     "ça ne m'embêtera pas",
-                    "comme tu voudras"
+                    "ne sois pas désolée, c'est comme tu veux"
                 ]
             };
         case "ça ne m'embêtera pas":
-        case "comme tu voudras":
+        case "ne sois pas désolée, c'est comme tu veux":
             return {
                 messages: [
                     {
@@ -825,7 +825,7 @@ export const followingMessage = (message, playerName) => {
                     },
                     {
                         msg: "https://open.spotify.com/intl-fr/track/3l3SbRkrK1aQ5Dk1h7vroV?si=b0f977f809644c57",
-                        type: null,
+                        type: "link",
                         received: true
                     },
                     {

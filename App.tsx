@@ -111,13 +111,14 @@ export default function App() {
     } else {
       stopMusic();
       return        (
+      <Modal>
       <Conversation
         contactName={conversationChapter.name}
         playerName={playerName}
         chapterConversation={conversationChapter}
         chapter={currentChapter}
         closeModal={closeModal} // Pass the closeModal function to the Conversation component
-      />)
+      /></Modal>)
     }
   };
 
