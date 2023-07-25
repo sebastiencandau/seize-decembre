@@ -37,6 +37,7 @@ const Menu = ({ startGame, chapter, restartGame }) => {
 
 
   const handleStartGame = async () => {
+    AsyncStorage.setItem('choices', JSON.stringify([]));
     await AsyncStorage.setItem('playerName', playerName);
     handlePress();
   };

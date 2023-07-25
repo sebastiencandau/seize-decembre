@@ -1,5 +1,7 @@
 import * as chapterOne from './chapterOne.utils';
 import * as chapterTwo from './chapterTwo.utils';
+import * as chapterThree from './chapterThree.utils';
+
 
 
 
@@ -8,15 +10,8 @@ export const narativeIndicationsForChapter = (chapterNumber) => {
         return chapterOne.narativeIndications;
     } else if (chapterNumber === 2) {
         return chapterTwo.narativeIndications;
-    }
-}
-
-export const playerChoices = (chapterNumber) => {
-    if (chapterNumber === 1) {
-        return chapterOne.playerChoices;
-    } 
-    else {
-        return chapterOne.playerChoices
+    } else if (chapterNumber === 3) {
+        return chapterThree.narativeIndications;
     }
 }
 
@@ -28,11 +23,13 @@ export const receiverScenario = (chapterNumber) => {
     }
 }
 
-export const followingMessage = (chapterNumber, message, playerName) => {
+export const followingMessage = async (chapterNumber, message, playerName) => {
     if (chapterNumber === 1) {
-        return chapterOne.followingMessage(message, playerName);
+        return await chapterOne.followingMessage(message, playerName);
     } else if (chapterNumber === 2) {
-        return chapterTwo.followingMessage(message, playerName);
+        return await chapterTwo.followingMessage(message, playerName);
+    } else if (chapterNumber === 3) {
+        return chapterThree.followingMessage(message, playerName);
     }
 }
 
@@ -41,8 +38,9 @@ export const startingConversation = (chapterNumber) => {
         return chapterOne.startingConversation;
     } else if (chapterNumber === 2) {
         return chapterTwo.startingConversation;
+    } else if (chapterNumber === 3) {
+        return chapterThree.startingConversation;
     }
-    
     else {
         return chapterOne.startingConversation
     }

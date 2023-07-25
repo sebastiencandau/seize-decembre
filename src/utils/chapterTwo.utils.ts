@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IConversation, IMessage } from "../interfaces/messages.interface";
 
 export const NAME = 'LUCIE';
@@ -22,7 +23,8 @@ export const narativeIndications = [
     "Partie 2",
 ]
 
-export const followingMessage = (message, playerName) => {
+export const followingMessage = async (message, playerName) => {
+    let choices;
     switch (message) {
         case "Hey Lucie !":
         case "hello":
@@ -127,6 +129,9 @@ export const followingMessage = (message, playerName) => {
                 ]
             };
         case "non, je parlais de se voir juste toi et moi":
+            choices = JSON.parse(await AsyncStorage.getItem('choices'));
+            choices.push("rdv");
+            await AsyncStorage.setItem('choices', JSON.stringify(choices));
             return {
                 messages: [
                     {
@@ -379,6 +384,9 @@ export const followingMessage = (message, playerName) => {
                 ]
             };
         case "oui, avec les autres":
+            choices = JSON.parse(await AsyncStorage.getItem('choices'));
+            choices.push("anniversaire");
+            await AsyncStorage.setItem('choices', JSON.stringify(choices));
             return {
                 messages: [
                     {
@@ -726,6 +734,9 @@ export const followingMessage = (message, playerName) => {
             };
 
         case "quelque chose ne va pas ?":
+            choices = JSON.parse(await AsyncStorage.getItem('choices'));
+            choices.push("anniversaire");
+            await AsyncStorage.setItem('choices', JSON.stringify(choices));
             return {
                 messages: [
                     {

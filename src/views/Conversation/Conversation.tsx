@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Image, View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Modal, Dimensions, TouchableHighlight, Linking } from 'react-native';
-import { followingMessage, playerChoices } from '../../utils/chapters.utils';
+import { Image, View, Text, TextInput, TouchableOpacity, Animated, FlatList, StyleSheet, Modal, Dimensions, TouchableHighlight, Linking } from 'react-native';
+import { followingMessage } from '../../utils/chapters.utils';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { IConversation, IMessage } from '../../interfaces/messages.interface';
 import { Audio } from 'expo-av';
@@ -27,6 +27,7 @@ const Conversation = ({
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
   const [receiveMessageSound, setReceiveMessageSound] = useState<Audio.Sound>();
   const [isWritingSound, setIsWritingSound] = useState<Audio.Sound>();
+  const [dotAnimation] = useState(new Animated.Value(0));
 
 
   const initSounds = async () => {
@@ -77,19 +78,52 @@ const Conversation = ({
       }
     }
   }
+  
+
+  useEffect(() => {
+    if (isWritting) {
+      startDotAnimation();
+    } else {
+      stopDotAnimation();
+    }
+  }, [isWritting]);
+
+  const startDotAnimation = () => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(dotAnimation, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(dotAnimation, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  };
+
+  const stopDotAnimation = () => {
+    dotAnimation.setValue(0);
+  };
 
   useEffect(() => {
     isEnding();
   }, [messages]);
 
-
-
-  useEffect(() => {
+  const initChoices = async () => {
     if (gameProgress > 0) {
-      const _followingMessage = followingMessage(chapter, messages[0].msg, playerName);
+      const _followingMessage = await followingMessage(chapter, messages[0].msg, playerName);
       setChoices(_followingMessage.choices);
       setFutureMessages(_followingMessage.messages);
     }
+  }
+
+
+  useEffect(() => {
+    initChoices();
   }, [gameProgress]);
 
   useEffect(() => {
@@ -260,20 +294,22 @@ const Conversation = ({
           contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
           inverted
         />
-        {isWritting &&
-          <View style={{ flexDirection: 'row' }}>
-            <View
-              style={{
-                backgroundColor: '#e0e0e0',
-                borderRadius: 50,
-                paddingHorizontal: 12,
-                paddingVertical: 8,
-                margin: 4,
-              }}
-            >
-              <Text>...</Text>
-            </View>
-          </View>}
+      {isWritting && 
+        <View style={{ flexDirection: 'row' }}>
+          <Animated.View
+            style={{
+              backgroundColor: '#e0e0e0',
+              borderRadius: 50,
+              paddingHorizontal: 12,
+              paddingVertical: 8,
+              margin: 4,
+              opacity: dotAnimation,
+            }}
+          >
+            <Text>...</Text>
+          </Animated.View>
+        </View>
+      }
       </View>
       <View style={styles.inputContainer}>
         <TouchableOpacity onPress={doChoice}>
