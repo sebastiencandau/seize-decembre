@@ -28,6 +28,7 @@ const Conversation = ({
   const [receiveMessageSound, setReceiveMessageSound] = useState<Audio.Sound>();
   const [isWritingSound, setIsWritingSound] = useState<Audio.Sound>();
   const [dotAnimation] = useState(new Animated.Value(0));
+  const [prenom, setPrenom] = useState('');
 
 
   const initSounds = async () => {
@@ -52,6 +53,45 @@ const Conversation = ({
   const playReceiveMessageSound = async () => {
     await receiveMessageSound.playAsync();
   }
+
+  useEffect(() => {
+    if (futureMessages.length > 0) {
+      /*
+      * Si c'est l'interlocuteur qui envoie un ou plusieurs messages, on time-out entre chaque message de manière 
+      * à donner un effet "est en train d'écrire"
+      */
+
+      // message reçu par quelqu'un
+      if (futureMessages[0].received && !futureMessages[0].type) {
+        setTimeout(() => {
+          playIsWrittingSound();
+          setIsWriting(true);
+        }, 2000);
+        stopPlayIsWrittingSound();
+        setTimeout(() => {
+          playReceiveMessageSound()
+          if(futureMessages[0].prenom){
+            setPrenom( futureMessages[0].prenom)
+          } else {
+            setPrenom(undefined);
+          }
+          setMessages([futureMessages[0], ...messages]);
+          const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
+          setIsWriting(false);
+          setFutureMessages(updatedFutureMessages);
+        }, 5000);
+        stopPlayReceiveMessageSound()
+      }
+      // message envoyé ou indication
+      else {
+        setTimeout(() => {
+          setMessages([futureMessages[0], ...messages]);
+          const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
+          setFutureMessages(updatedFutureMessages);
+        }, 1000);
+      }
+    }
+  }, [futureMessages]);
 
   useEffect(() => {
     initSounds();
@@ -126,39 +166,7 @@ const Conversation = ({
     initChoices();
   }, [gameProgress]);
 
-  useEffect(() => {
-    if (futureMessages.length > 0) {
-      /*
-      * Si c'est l'interlocuteur qui envoie un ou plusieurs messages, on time-out entre chaque message de manière 
-      * à donner un effet "est en train d'écrire"
-      */
 
-      // message reçu par quelqu'un
-      if (futureMessages[0].received && !futureMessages[0].type) {
-        setTimeout(() => {
-          playIsWrittingSound();
-          setIsWriting(true);
-        }, 2000);
-        stopPlayIsWrittingSound();
-        setTimeout(() => {
-          playReceiveMessageSound()
-          setMessages([futureMessages[0], ...messages]);
-          const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
-          setIsWriting(false);
-          setFutureMessages(updatedFutureMessages);
-        }, 5000);
-        stopPlayReceiveMessageSound()
-      }
-      // message envoyé ou indication
-      else {
-        setTimeout(() => {
-          setMessages([futureMessages[0], ...messages]);
-          const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
-          setFutureMessages(updatedFutureMessages);
-        }, 1000);
-      }
-    }
-  }, [futureMessages]);
 
   const handleSend = (item) => {
     const newMessage = { type: null, received: false, msg: item };
@@ -184,7 +192,17 @@ const Conversation = ({
   const renderMessage = ({ item }) => (
     <>
       {item.type === null && (
-        <View style={{ flexDirection: item.received ? 'row' : 'row-reverse' }}>
+        <View style={{flexDirection: 'column', 
+        alignItems: item.received ? 'flex-start' : 'flex-end',  
+        }}>
+          {item.received && item.prenom && 
+          <View style={{flexDirection: 'row'}}>
+          <View style={styles.convPictureContainer}>
+            <Image source={require(`../../../assets/${item.prenom}.jpg`)} style={styles.profilePicture} />
+          </View>
+          <Text>{item.prenom}</Text>
+          </View>
+          }
           <View
             style={{
               backgroundColor: item.received ? '#e0e0e0' : '#80cbc4',
@@ -312,12 +330,11 @@ const Conversation = ({
       }
       </View>
       <View style={styles.inputContainer}>
-        <TouchableOpacity onPress={doChoice}>
+        <TouchableOpacity onPress={futureMessages.length<=0 ? doChoice : () => {}}>
           <TextInput
             style={styles.textInput}
             placeholder="Ecrivez un message..."
             editable={false}
-            onPressIn={doChoice}
           />
         </TouchableOpacity>
         <TouchableOpacity style={styles.sendButton}>
@@ -346,6 +363,13 @@ const styles = StyleSheet.create({
   profilePictureContainer: {
     width: 60,
     height: 60,
+    borderRadius: 50,
+    overflow: 'hidden',
+    marginRight: 8,
+  },
+  convPictureContainer: {
+    width: 20,
+    height: 20,
     borderRadius: 50,
     overflow: 'hidden',
     marginRight: 8,

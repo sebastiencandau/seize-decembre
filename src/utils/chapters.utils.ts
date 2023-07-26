@@ -1,8 +1,7 @@
 import * as chapterOne from './chapterOne.utils';
 import * as chapterTwo from './chapterTwo.utils';
 import * as chapterThree from './chapterThree.utils';
-
-
+import * as chapterFour from './chapterFour.utils';
 
 
 export const narativeIndicationsForChapter = (chapterNumber) => {
@@ -12,6 +11,8 @@ export const narativeIndicationsForChapter = (chapterNumber) => {
         return chapterTwo.narativeIndications;
     } else if (chapterNumber === 3) {
         return chapterThree.narativeIndications;
+    } else if (chapterNumber === 4) {
+        return chapterFour.narativeIndications;
     }
 }
 
@@ -30,6 +31,8 @@ export const followingMessage = async (chapterNumber, message, playerName) => {
         return await chapterTwo.followingMessage(message, playerName);
     } else if (chapterNumber === 3) {
         return chapterThree.followingMessage(message, playerName);
+    }else if (chapterNumber === 4) {
+        return chapterFour.followingMessage(message, playerName);
     }
 }
 
@@ -40,6 +43,8 @@ export const startingConversation = (chapterNumber) => {
         return chapterTwo.startingConversation;
     } else if (chapterNumber === 3) {
         return chapterThree.startingConversation;
+    } else if (chapterNumber === 4) {
+        return chapterFour.startingConversation;
     }
     else {
         return chapterOne.startingConversation

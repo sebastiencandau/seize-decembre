@@ -130,7 +130,7 @@ export const followingMessage = async (message, playerName) => {
             };
         case "non, je parlais de se voir juste toi et moi":
             choices = JSON.parse(await AsyncStorage.getItem('choices'));
-            choices.push("rdv");
+            choices[0] = "rdv";
             await AsyncStorage.setItem('choices', JSON.stringify(choices));
             return {
                 messages: [
@@ -175,6 +175,7 @@ export const followingMessage = async (message, playerName) => {
                 ]
             };
         case "J'essaierai":
+        case "C'est parfait":
             return {
                 messages: [
                     {
@@ -385,7 +386,7 @@ export const followingMessage = async (message, playerName) => {
             };
         case "oui, avec les autres":
             choices = JSON.parse(await AsyncStorage.getItem('choices'));
-            choices.push("anniversaire");
+            choices[0] = "anniversaire";
             await AsyncStorage.setItem('choices', JSON.stringify(choices));
             return {
                 messages: [
@@ -735,7 +736,7 @@ export const followingMessage = async (message, playerName) => {
 
         case "quelque chose ne va pas ?":
             choices = JSON.parse(await AsyncStorage.getItem('choices'));
-            choices.push("anniversaire");
+            choices[0] = "anniversaire";
             await AsyncStorage.setItem('choices', JSON.stringify(choices));
             return {
                 messages: [

@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 const Menu = ({ startGame, chapter, restartGame }) => {
+
   const [playerName, setPlayerName] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [restart, setRestart] = useState(false);
@@ -55,7 +56,7 @@ const Menu = ({ startGame, chapter, restartGame }) => {
       <View style={styles.container}>
         <Text style={styles.title}>Seize décembre</Text>
         <TouchableOpacity onPress={handlePress} style={styles.button}>
-          <Text style={styles.buttonText}>{chapter === 1 ? 'Commencer': 'Continuer'}</Text>
+          <Text style={styles.buttonText}>{chapter === 1 || !chapter ? 'Commencer': 'Continuer'}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handlePressRestart} style={styles.button}>
           <Text style={styles.buttonText}>Recommencer</Text>

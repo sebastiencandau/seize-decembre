@@ -41,6 +41,8 @@ export default function App() {
     } else {
       setCurrentChapter(1);
     }
+    }else {
+      setCurrentChapter(1);
     }
   }
 
@@ -68,7 +70,7 @@ export default function App() {
       const timer = setInterval(() => {
         setCurrentIndication(narrativeIndications[index]);
         setIndex((prevIndex) => prevIndex + 1);
-      }, 4000); // 1000 ms = 1 second
+      }, 100); // 1000 ms = 1 second
       return () => {
         clearInterval(timer);
       };

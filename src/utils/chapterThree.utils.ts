@@ -242,7 +242,7 @@ export const followingMessage = async (message, playerName) => {
         case "j'ai un date avec elle":
         case "je suis aussi invité à son anniversaire":
             choices = JSON.parse(await AsyncStorage.getItem('choices'))
-            choices.push('honnete');
+            choices[1] = 'honnete';
             AsyncStorage.setItem('choices', JSON.stringify(choices));
             return {
                 messages: [
@@ -281,7 +281,7 @@ export const followingMessage = async (message, playerName) => {
             };
         case "je suis content pour toi mon pote":
             choices = JSON.parse(await AsyncStorage.getItem('choices'))
-            choices.push('menteur');
+            choices[1] = 'menteur';
             AsyncStorage.setItem('choices', JSON.stringify(choices));
             return {
                 messages: [
