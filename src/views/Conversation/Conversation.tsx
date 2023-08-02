@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Image, View, Text, TextInput, TouchableOpacity, Animated, FlatList, StyleSheet, Modal, Dimensions, TouchableHighlight, Linking } from 'react-native';
+import { Image, View, Text, TextInput, TouchableOpacity,ImageBackground, Animated, FlatList, StyleSheet, Modal, Dimensions, TouchableHighlight, Linking } from 'react-native';
 import { followingMessage } from '../../utils/chapters.utils';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { IConversation, IMessage } from '../../interfaces/messages.interface';
 import { Audio } from 'expo-av';
 import { Link } from '@react-navigation/native';
+import * as AllImages from '../../../assets';
 
 const screen = Dimensions.get('window');
 const screenWidth = screen.width - 80;
@@ -19,6 +20,7 @@ const Conversation = ({
 }) => {
   const conversation: IConversation = chapterConversation;
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const [background, setBackground] = useState<string>();
   const [gameProgress, setGameProgress] = useState(0);
   const [choices, setChoices] = useState<Array<string>>()
   const [modalChoiceOpen, setModalChoiceOpen] = useState(false);
@@ -28,7 +30,8 @@ const Conversation = ({
   const [receiveMessageSound, setReceiveMessageSound] = useState<Audio.Sound>();
   const [isWritingSound, setIsWritingSound] = useState<Audio.Sound>();
   const [dotAnimation] = useState(new Animated.Value(0));
-  const [prenom, setPrenom] = useState('');
+  const [imagePrenom, setImagePrenom] = useState('');
+  
 
 
   const initSounds = async () => {
@@ -71,9 +74,9 @@ const Conversation = ({
         setTimeout(() => {
           playReceiveMessageSound()
           if(futureMessages[0].prenom){
-            setPrenom( futureMessages[0].prenom)
+            setImagePrenom( `../../../assets/${futureMessages[0].prenom}.jpg`)
           } else {
-            setPrenom(undefined);
+            setImagePrenom(undefined);
           }
           setMessages([futureMessages[0], ...messages]);
           const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
@@ -81,6 +84,12 @@ const Conversation = ({
           setFutureMessages(updatedFutureMessages);
         }, 5000);
         stopPlayReceiveMessageSound()
+      } else if (futureMessages[0].type === 'indication') {
+        setTimeout(() => {
+          setMessages([futureMessages[0], ...messages]);
+          const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
+          setFutureMessages(updatedFutureMessages);
+        }, 4000);
       }
       // message envoyé ou indication
       else {
@@ -96,6 +105,9 @@ const Conversation = ({
   useEffect(() => {
     initSounds();
     setChoices(conversation.choices);
+    if(conversation.background){
+      setBackground(conversation.background)
+    }
     setFutureMessages(conversation.messages);
   }, []);
 
@@ -104,7 +116,6 @@ const Conversation = ({
       if (messages[0].type !== null) {
         if (messages[0].type !== 'indication') {
           if(messages[0].type !== 'link'){
-            console.log(chapter)
             const newChapter = {
               num: chapter + 1,
               result: messages[0].type
@@ -198,7 +209,7 @@ const Conversation = ({
           {item.received && item.prenom && 
           <View style={{flexDirection: 'row'}}>
           <View style={styles.convPictureContainer}>
-            <Image source={require(`../../../assets/${item.prenom}.jpg`)} style={styles.profilePicture} />
+            <Image source={AllImages[item.prenom]} style={styles.profilePicture} />
           </View>
           <Text>{item.prenom}</Text>
           </View>
@@ -304,43 +315,47 @@ const Conversation = ({
           </View>
         </TouchableOpacity>
       </Modal>
-      <View style={styles.conversationContainer}>
-        <FlatList
-          data={messages}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={renderMessage}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
-          inverted
-        />
-      {isWritting && 
-        <View style={{ flexDirection: 'row' }}>
-          <Animated.View
-            style={{
-              backgroundColor: '#e0e0e0',
-              borderRadius: 50,
-              paddingHorizontal: 12,
-              paddingVertical: 8,
-              margin: 4,
-              opacity: dotAnimation,
-            }}
-          >
-            <Text>...</Text>
-          </Animated.View>
+      <ImageBackground blurRadius={5} source={{uri: background}} style={styles.backgroundImage}>
+        <View style={styles.overlay}>
+          <View style={styles.conversationContainer}>
+            <FlatList
+              data={messages}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={renderMessage}
+              contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
+              inverted
+            />
+            {isWritting &&
+              <View style={{ flexDirection: 'row' }}>
+                <Animated.View
+                  style={{
+                    backgroundColor: '#e0e0e0',
+                    borderRadius: 50,
+                    paddingHorizontal: 12,
+                    paddingVertical: 8,
+                    margin: 4,
+                    opacity: dotAnimation,
+                  }}
+                >
+                  <Text>...</Text>
+                </Animated.View>
+              </View>
+            }
+          </View>
+          <View style={styles.inputContainer}>
+            <TouchableOpacity onPress={futureMessages.length <= 0 ? doChoice : () => { }}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="Ecrivez un message..."
+                editable={false}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.sendButton}>
+              <Text style={{ color: 'white' }}>Envoyer</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      }
-      </View>
-      <View style={styles.inputContainer}>
-        <TouchableOpacity onPress={futureMessages.length<=0 ? doChoice : () => {}}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Ecrivez un message..."
-            editable={false}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.sendButton}>
-          <Text style={{ color: 'white' }}>Envoyer</Text>
-        </TouchableOpacity>
-      </View>
+      </ImageBackground>
     </View>
   );
 };
@@ -366,10 +381,16 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     overflow: 'hidden',
     marginRight: 8,
+  }, backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
+  overlay: {
+    flex: 1,
   },
   convPictureContainer: {
-    width: 20,
-    height: 20,
+    width: 32,
+    height: 32,
     borderRadius: 50,
     overflow: 'hidden',
     marginRight: 8,

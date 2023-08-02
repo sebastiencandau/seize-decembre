@@ -171,7 +171,8 @@ export const followingMessage = async (message, playerName) => {
                     }
                 ],
                 choices: [
-                    "je vais aller dormir, à vendredi soir"
+                    "je vais aller dormir, à vendredi soir",
+                    "(ne rien dire)"
                 ]
             };
         case "J'essaierai":
@@ -207,26 +208,26 @@ export const followingMessage = async (message, playerName) => {
                     "bien sur, je t'écoute"
                 ]
             };
-            case "à plus tard Lucie":
-            case "à plus dans le bus !":
-            case "hasta luego":
-                return {
-                    messages: [
-                {
-                  msg: "Lucie s'est déconnectée",
-                  type: 'indication',
-                  received: true
-                },
-                {
-                  msg: "FIN DE LA PARTIE 2",
-                  type: 'pas_seduite',
-                  received: true
-                }
-              ],
-                    choices: [
-                ""
-              ]
-                };
+        case "à plus tard Lucie":
+        case "à plus dans le bus !":
+        case "hasta luego":
+            return {
+                messages: [
+                    {
+                        msg: "Lucie s'est déconnectée",
+                        type: 'indication',
+                        received: true
+                    },
+                    {
+                        msg: "FIN DE LA PARTIE 2",
+                        type: 'pas_seduite',
+                        received: true
+                    }
+                ],
+                choices: [
+                    ""
+                ]
+            };
         case "je vais aller dormir, à vendredi soir":
             return {
                 messages: [
@@ -848,10 +849,11 @@ export const followingMessage = async (message, playerName) => {
                 ],
                 choices: [
                     "c'est une belle musique",
-                    "mais on est les personnages principaux de l'histoire"
+                    "j'irai écouter + tard"
                 ]
             };
         case "c'est une belle musique ":
+        case "j'irai écouter + tard":
             return {
                 messages: [
                     {

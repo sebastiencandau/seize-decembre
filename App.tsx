@@ -10,6 +10,7 @@ import Conversation from './src/views/Conversation/Conversation';
 import Menu from './src/views/Menu/Menu';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Audio } from 'expo-av';
+import { IConversation } from './src/interfaces/messages.interface';
 
 
 
@@ -19,7 +20,7 @@ export default function App() {
   const [currentChapter, setCurrentChapter] = useState<number>();
   const [narrativeIndications, setNarrativeIndications] = useState<string[]>(); 
   const [currentIndication, setCurrentIndication] = useState<string>();
-  const conversationChapter = startingConversation(currentChapter);
+  const [conversationChapter, setConversationChapter] = useState<IConversation>();
   const [index, setIndex] = useState(0);
   const [playerName, setPlayerName] = useState<string>();
   const [gameStarted, setGameStarted] = useState(false);
@@ -32,17 +33,22 @@ export default function App() {
 
     if(await AsyncStorage.getItem('chapter')){
     const chapter = await AsyncStorage.getItem('chapter');
+
     if(chapter){
       if(JSON.parse(chapter).result !== "loser"){
         setCurrentChapter(JSON.parse(chapter).num)
+        setConversationChapter(await startingConversation(JSON.parse(chapter).num));
       } else {
         setCurrentChapter(1);
+        setConversationChapter(await startingConversation(1));
       }
     } else {
       setCurrentChapter(1);
+      setConversationChapter(await startingConversation(1));
     }
     }else {
       setCurrentChapter(1);
+      setConversationChapter(await startingConversation(1));
     }
   }
 
@@ -79,9 +85,9 @@ export default function App() {
   }, [index, narrativeIndications]);
 
   const closeModal = async () => {
+    stopMusic();
     setIndex(0);
     setNarrativeIndications(undefined);
-    stopMusic();
     setUpGame();
   }
 
@@ -90,7 +96,7 @@ export default function App() {
     setCurrentChapter(1);
     if(name){
       setPlayerName(name);
-      setNarrativeIndications(narativeIndicationsForChapter(1));
+      setNarrativeIndications(await narativeIndicationsForChapter(1));
     }
   }
 
@@ -100,7 +106,7 @@ export default function App() {
     if(name){
       setPlayerName(name);
 
-      setNarrativeIndications(narativeIndicationsForChapter(currentChapter));
+      setNarrativeIndications(await narativeIndicationsForChapter(currentChapter));
     }
   }
 
@@ -115,7 +121,7 @@ export default function App() {
       return        (
       <Modal>
       <Conversation
-        contactName={conversationChapter.name}
+        contactName={conversationChapter?.name}
         playerName={playerName}
         chapterConversation={conversationChapter}
         chapter={currentChapter}

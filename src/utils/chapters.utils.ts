@@ -2,9 +2,11 @@ import * as chapterOne from './chapterOne.utils';
 import * as chapterTwo from './chapterTwo.utils';
 import * as chapterThree from './chapterThree.utils';
 import * as chapterFour from './chapterFour.utils';
+import * as chapterRdv from './chapterRdv.utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-export const narativeIndicationsForChapter = (chapterNumber) => {
+export const narativeIndicationsForChapter = async (chapterNumber) => {
     if (chapterNumber === 1) {
         return chapterOne.narativeIndications;
     } else if (chapterNumber === 2) {
@@ -12,7 +14,12 @@ export const narativeIndicationsForChapter = (chapterNumber) => {
     } else if (chapterNumber === 3) {
         return chapterThree.narativeIndications;
     } else if (chapterNumber === 4) {
-        return chapterFour.narativeIndications;
+        const choices = JSON.parse(await AsyncStorage.getItem('choices'));
+        if (choices[0] === 'rdv') {
+            return chapterRdv.narativeIndications;
+        } else {
+            return chapterFour.narativeIndications;
+        }
     }
 }
 
@@ -31,12 +38,17 @@ export const followingMessage = async (chapterNumber, message, playerName) => {
         return await chapterTwo.followingMessage(message, playerName);
     } else if (chapterNumber === 3) {
         return chapterThree.followingMessage(message, playerName);
-    }else if (chapterNumber === 4) {
-        return chapterFour.followingMessage(message, playerName);
+    } else if (chapterNumber === 4) {
+        const choices = JSON.parse(await AsyncStorage.getItem('choices'));
+        if (choices[0] === 'rdv') {
+            return chapterRdv.followingMessage(message, playerName);
+        } else {
+            return chapterFour.followingMessage(message, playerName);
+        }
     }
 }
 
-export const startingConversation = (chapterNumber) => {
+export const startingConversation = async (chapterNumber) => {
     if (chapterNumber === 1) {
         return chapterOne.startingConversation;
     } else if (chapterNumber === 2) {
@@ -44,7 +56,12 @@ export const startingConversation = (chapterNumber) => {
     } else if (chapterNumber === 3) {
         return chapterThree.startingConversation;
     } else if (chapterNumber === 4) {
-        return chapterFour.startingConversation;
+        const choices = JSON.parse(await AsyncStorage.getItem('choices'));
+        if (choices[0] === 'rdv') {
+            return chapterRdv.startingConversation;
+        } else {
+            return chapterFour.startingConversation;
+        }
     }
     else {
         return chapterOne.startingConversation
