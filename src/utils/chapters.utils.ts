@@ -3,6 +3,7 @@ import * as chapterTwo from './chapterTwo.utils';
 import * as chapterThree from './chapterThree.utils';
 import * as chapterFour from './chapterFour.utils';
 import * as chapterRdv from './chapterRdv.utils';
+import * as chapterFinal from './chapterFinal.utils'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -20,6 +21,8 @@ export const narativeIndicationsForChapter = async (chapterNumber) => {
         } else {
             return chapterFour.narativeIndications;
         }
+    } else if (chapterNumber === 5) {
+        return chapterFinal.narativeIndications;
     }
 }
 
@@ -45,6 +48,8 @@ export const followingMessage = async (chapterNumber, message, playerName) => {
         } else {
             return chapterFour.followingMessage(message, playerName);
         }
+    } else if (chapterNumber === 5) {
+        return chapterFinal.followingMessage(message, playerName);
     }
 }
 
@@ -62,6 +67,8 @@ export const startingConversation = async (chapterNumber) => {
         } else {
             return chapterFour.startingConversation;
         }
+    } else if (chapterNumber === 5){
+        return chapterFinal.startingConversation;
     }
     else {
         return chapterOne.startingConversation
