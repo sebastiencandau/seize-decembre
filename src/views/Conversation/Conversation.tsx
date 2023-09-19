@@ -41,7 +41,7 @@ const Conversation = ({
     setReceiveMessageSound(_receiveMessageSound.sound);
     setIsWritingSound(_isWritingSound.sound);
     const choices = JSON.parse(await AsyncStorage.getItem('choices'));
-    if(chapter === 4 && choices[0] === 'rdv' ){
+    if(chapter === 999 && choices[0] === 'rdv' ){
       const rdvTheme = await Audio.Sound.createAsync(require('../../../assets/musics/rdv_theme.mp3'));
       await rdvTheme.sound.playAsync();
     }
@@ -124,12 +124,18 @@ const Conversation = ({
           if(messages[0].type !== 'link'){
             let newChapter;
             const choicesStorage = JSON.parse(await AsyncStorage.getItem('choices'));
-            if(choicesStorage[0] === 'rdv' && chapter === 4){
+            if(choicesStorage[0] === 'rdv' && chapter === 3){
               newChapter = {
-              num: chapter + 2,
+              num: 999,
               result: messages[0].type
             }
-            } else {
+          } else if (choicesStorage[0] === 'rdv' && chapter === 999){
+            newChapter = {
+              num: 4,
+              result: messages[0].type
+            }
+          }
+          else {
               newChapter = {
                 num: chapter + 1,
                 result: messages[0].type
@@ -361,7 +367,7 @@ const Conversation = ({
             <TouchableOpacity onPress={futureMessages.length <= 0 ? doChoice : () => { }}>
               <TextInput
                 style={styles.textInput}
-                placeholder="Ecrivez un message..."
+                placeholder={futureMessages.length <= 0 ? "Faites un choix..." : ""}
                 editable={false}
               />
             </TouchableOpacity>

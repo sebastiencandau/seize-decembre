@@ -33,7 +33,7 @@ export default function App() {
     if(await AsyncStorage.getItem('chapter')){
   
       if(chapter){
-        if(JSON.parse(chapter).num == 7){
+        if(JSON.parse(chapter).num == 6){
           const { sound } = await Audio.Sound.createAsync( require('./assets/musics/chapter_one_ending_music.mp3'));
           setBackgroundMusic(sound); 
           console.log('ui'); 

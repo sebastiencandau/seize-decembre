@@ -94,6 +94,9 @@ export const followingMessage = async (message, playerName) => {
                 ]
             };
         case "c'est moi que tu traites de loser ?":
+            choices = JSON.parse(await AsyncStorage.getItem('choices'))
+            choices[5] = 'fight';
+            AsyncStorage.setItem('choices', JSON.stringify(choices));
             return {
                 messages: [
                     {
@@ -110,6 +113,10 @@ export const followingMessage = async (message, playerName) => {
                 ]
             };
         case "( ne rien dire )":
+        case "je vais même pas entrer dans ton jeu, je sais même pas qui tu es":
+            choices = JSON.parse(await AsyncStorage.getItem('choices'))
+            choices[5] = 'no_fight';
+            AsyncStorage.setItem('choices', JSON.stringify(choices));
             return {
                 messages: [
                     {

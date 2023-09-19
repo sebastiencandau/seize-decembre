@@ -8,6 +8,8 @@ import {
   TextInput,
   ImageBackground,
   StyleSheet,
+  Image,
+  ScrollView
 } from 'react-native';
 import { choicesDescription } from '../../utils/chapters.utils';
 
@@ -65,7 +67,7 @@ const Menu = ({ startGame, chapter, restartGame }) => {
       style={styles.backgroundImage}
       blurRadius={5}
     >
-      { chapter !== 7 && 
+      { chapter !== 6 && 
       <View style={styles.container}>
         <Text style={styles.title}>Seize décembre</Text>
         <TouchableOpacity onPress={handlePress} style={styles.button}>
@@ -117,43 +119,54 @@ const Menu = ({ startGame, chapter, restartGame }) => {
         </View>
       </Modal>
             {/* Modale des choix */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={choicesModalVisible}
-        onRequestClose={() => {
+
+<Modal
+  animationType="slide"
+  transparent={true}
+  visible={choicesModalVisible}
+  onRequestClose={() => {
+    setChoicesModalVisible(false);
+  }}
+>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <Text style={styles.modalTitle}>Vos choix :</Text>
+      <ScrollView style={styles.choicesScrollView}>
+        {choicesList.map((choice, index) => (
+          <View key={index} style={styles.ModalChoice}>
+            {index % 2 === 0 ? ( // Alterne entre gauche et droite pour chaque choix
+              <>
+                {choice.img && (
+                  <Image source={choice.img} style={styles.choiceImage} />
+                )}
+                <Text style={styles.choiceText}>
+                  {choice.desc}
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text style={styles.choiceText}>
+                  {choice.desc}
+                </Text>
+                {choice.img && (
+                  <Image source={choice.img} style={styles.choiceImage} />
+                )}
+              </>
+            )}
+          </View>
+        ))}
+      </ScrollView>
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => {
           setChoicesModalVisible(false);
         }}
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Vos choix :</Text>
-            {choicesList.map((choice, index) => (
-              <View>
-              <Text key={index} style={styles.choiceText}>
-                {choice}
-              </Text>
-              <View
-  style={{
-    borderBottomColor: 'black',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    marginTop: 8,
-    marginBottom: 8
-  }}
-/>
-              </View>
-            ))}
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => {
-                setChoicesModalVisible(false);
-              }}
-            >
-              <Text style={styles.closeButtonText}>Fermer</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+        <Text style={styles.closeButtonText}>Fermer</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
     </ImageBackground>
   );
 };
@@ -192,9 +205,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backdropFilter: 'blur(10px)', // Applique un flou de 10px au fond
   },
   modalContent: {
-    backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
   },
@@ -202,6 +215,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: 'white'
   },
   textInput: {
     borderWidth: 1,
@@ -224,6 +238,23 @@ const styles = StyleSheet.create({
   choiceText: {
     fontSize: 16,
     marginBottom: 10,
+    color: 'white'
+  },
+  ModalChoice: {
+    flexDirection: 'row', // Pour afficher les éléments en ligne (texte et image)
+    alignItems: 'center', // Pour aligner les éléments verticalement au centre
+    marginBottom: 50, // Espacement entre les choix  },
+  },
+  choiceImage: {
+    width: 200, // Ajoutez la largeur souhaitée
+    height: 200, // Ajoutez la hauteur souhaitée
+    resizeMode: 'contain', // Ajustez le mode de redimensionnement en fonction de vos besoins
+    marginBottom: 10, // Marge inférieure pour espacer l'image de la description
+    marginRight: 10
+  },  
+  choicesScrollView: {
+    maxHeight: 600, // Ajustez la hauteur maximale de la ScrollView selon vos besoins
+    marginBottom: 10, // Espacement entre la liste des choix et le bouton Fermer
   },
   closeButton: {
     backgroundColor: 'red',

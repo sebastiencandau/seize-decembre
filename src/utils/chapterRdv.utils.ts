@@ -26,7 +26,7 @@ background: 'https://img.freepik.com/photos-premium/magnifique-coucher-soleil-la
 export const followingMessage = async (message, playerName) => {
   let choices;
   switch (message) {
-    case "arriver en retard":
+    case "(arriver en retard)":
       choices = JSON.parse(await AsyncStorage.getItem('choices'))
       choices[2] = 'retard';
       AsyncStorage.setItem('choices', JSON.stringify(choices));
@@ -298,33 +298,39 @@ export const followingMessage = async (message, playerName) => {
               type: 'indication',
               received: true
             },
-            {
-              msg: "j'ai croisé Matéo en arrivant",
-              type: null,
-              received: true
-            },
-            {
-              msg: "je lui ai dit que je venais te voir",
-              type: null,
-              received: true
-            },
-            {
-              msg: "il m'a dit de te passer le bonjour",
-              type: null,
-              received: true
-            },
-            {
-              msg: "vous avez l'air vraiment très proche",
-              type: null,
-              received: true
-            }
-          ],
-          choices: [
-            "c'est mon meilleur ami",
-            "on est pas si amis que ça"
-          ]
-        };
+               {
+                    msg: "moi aussi je suis contente de te voir",
+                    type: null,
+                    received: true
+                  },
+                  {
+                    msg: "j'ai croisé Matéo en arrivant",
+                    type: null,
+                    received: true
+                  },
+                  {
+                    msg: "je lui ai dit que je venais te voir",
+                    type: null,
+                    received: true
+                  },
+                  {
+                    msg: "il est parti sans dire un mot",
+                    type: null,
+                    received: true
+                  },
+                  {
+                    msg: "tu sais ce qu'il lui arrive ?",
+                    type: null,
+                    received: true
+                  }
+                ],
+                choices: [
+                  "je pense que je l'ai déçu",
+                  "aucune idée"
+                ]
       }
+    }
+
 
     case "je pense que je l'ai déçu":
     case "aucune idée":
@@ -764,6 +770,10 @@ export const followingMessage = async (message, playerName) => {
       };
 
     case "( l'embrasser )":
+      choices = JSON.parse(await AsyncStorage.getItem('choices'))
+      choices[3] = 'kiss';
+      choices[4] = 'anniversaire'
+      AsyncStorage.setItem('choices', JSON.stringify(choices));
       return {
         messages: [
           {
@@ -799,11 +809,15 @@ export const followingMessage = async (message, playerName) => {
       };
 
     case "( rester là où vous êtes )":
+      choices = JSON.parse(await AsyncStorage.getItem('choices'))
+      choices[3] = 'no_kiss';
+      choices[4] = 'anniversaire'
+      AsyncStorage.setItem('choices', JSON.stringify(choices));
       return {
         messages: [
           {
             msg: "Lucie se tourne vers vous et vous sourit",
-            type: null,
+            type: 'indication',
             received: true
           },
           {
