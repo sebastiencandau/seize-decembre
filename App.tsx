@@ -27,29 +27,46 @@ export default function App() {
   const [backgroundMusic, setBackgroundMusic] = useState<Audio.Sound>();
 
   async function setUpGame() {
-    // set music
-    const { sound } = await Audio.Sound.createAsync( require('./assets/musics/max_and_chloe.mp3'));
-    setBackgroundMusic(sound);
 
-    if(await AsyncStorage.getItem('chapter')){
     const chapter = await AsyncStorage.getItem('chapter');
 
-    if(chapter){
-      if(JSON.parse(chapter).result !== "loser"){
-        setCurrentChapter(JSON.parse(chapter).num)
-        setConversationChapter(await startingConversation(JSON.parse(chapter).num));
+    if(await AsyncStorage.getItem('chapter')){
+  
+      if(chapter){
+        if(JSON.parse(chapter).num == 7){
+          const { sound } = await Audio.Sound.createAsync( require('./assets/musics/chapter_one_ending_music.mp3'));
+          setBackgroundMusic(sound); 
+          console.log('ui'); 
+        } else {
+        // set music
+        const { sound } = await Audio.Sound.createAsync( require('./assets/musics/max_and_chloe.mp3'));
+        setBackgroundMusic(sound);
+        }
+
+        if(JSON.parse(chapter).result !== "loser"){
+          setCurrentChapter(JSON.parse(chapter).num)
+          setConversationChapter(await startingConversation(JSON.parse(chapter).num));
+        } else {
+          setCurrentChapter(1);
+          setConversationChapter(await startingConversation(1));
+        }
       } else {
+                // set music
+                const { sound } = await Audio.Sound.createAsync( require('./assets/musics/max_and_chloe.mp3'));
+                setBackgroundMusic(sound);
         setCurrentChapter(1);
         setConversationChapter(await startingConversation(1));
       }
-    } else {
-      setCurrentChapter(1);
-      setConversationChapter(await startingConversation(1));
-    }
-    }else {
-      setCurrentChapter(1);
-      setConversationChapter(await startingConversation(1));
-    }
+      }else {
+                // set music
+                const { sound } = await Audio.Sound.createAsync( require('./assets/musics/max_and_chloe.mp3'));
+                setBackgroundMusic(sound);
+        setCurrentChapter(1);
+        setConversationChapter(await startingConversation(1));
+      }
+    
+
+    
   }
 
   const playMusic = async () => {
@@ -76,7 +93,7 @@ export default function App() {
       const timer = setInterval(() => {
         setCurrentIndication(narrativeIndications[index]);
         setIndex((prevIndex) => prevIndex + 1);
-      }, 100); // 1000 ms = 1 second
+      }, 5000); // 1000 ms = 1 second
       return () => {
         clearInterval(timer);
       };

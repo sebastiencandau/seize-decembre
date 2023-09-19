@@ -6,6 +6,7 @@ export const NAME = 'Matéo';
 export const narativeIndications = [
     "Chapitre 1: Lucie",
     "Partie 3",
+    "24 Novembre : 00h04"
 ]
 
 export const startingConversation: IConversation =

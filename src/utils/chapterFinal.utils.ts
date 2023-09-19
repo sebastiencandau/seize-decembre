@@ -29,23 +29,30 @@ export const followingMessage = async (message, playerName) => {
                 messages: [
                     { msg: `Bonjour ${playerName}`, type: null, received: true },
                     { msg: `Je suis le père de Lucie`, type: null, received: true },
-                    { msg: `Je sais que vous êtes proches ma fille et toi`, type: null, received: true },
-                    { msg: `Alors voilà...`, type: null, received: true },
-                    { msg: `je voulais t'annoncer son décès hier dans l'après midi...`, type: null, received: true },
-                    { msg: `Lucie s'est suicidée.`, type: null, received: true },
-
+                    { msg: `je voulais t'annoncer que son anniversaire est annulé.`, type: null, received: true },
                 ],
                 choices: [
-                    "QUOI ?!",
+                    "pourquoi ?",
+                    "c'est une blague ?"
                 ]
             };
+        case "pourquoi ?":
+        case "c'est une blague ?":
+            return {
+                messages: [
+                    { msg: `Lucie est décédée hier après midi.`, type: null, received: true },
+                ],
+                choices: [
+                    "QUOI ?!"
+                ]
+            }
         case "QUOI ?!":
             return {
                 messages: [
                     { msg: `Oui...`, type: null, received: true },
                     { msg: `Elle s'est tiré une balle dans la tête.`, type: null, received: true },
                     { msg: `Bon courage ${playerName}.`, type: null, received: true },
-                    { msg: `FIN DE LA PREMIERE PARTIE`, type: 'indication', received: true },
+                    { msg: `FIN DE LA PREMIERE PARTIE`, type: 'fin_chapitre', received: true },
                 ]
             }
     }

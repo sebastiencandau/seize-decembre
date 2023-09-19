@@ -6,6 +6,7 @@ export const NAME = 'Lucie';
 export const narativeIndications = [
   "Chapitre 1: Lucie",
   "Partie bonus: Le rendez-vous",
+  "1er décembre : 19h12"
 ]
 
 export const startingConversation: IConversation =
@@ -148,7 +149,7 @@ export const followingMessage = async (message, playerName) => {
           {
             msg: choices[2] === 'retard' ?
               "ce doit faire 1h que je t'attends" :
-              choices[2] === 'heure' ? "tu est très ponctuel, je suis arrivé un peu à l'avance" :
+              choices[2] === 'heure' ? "tu es très ponctuel, je suis arrivée un peu à l'avance" :
                 "je ne m'attendais pas à ce que tu viennes aussi tôt",
             type: null,
             received: true
@@ -156,8 +157,8 @@ export const followingMessage = async (message, playerName) => {
           {
             msg: choices[2] === 'retard' ?
               "Lucie paraît déçue" :
-              "tu est très ponctuel, je suis arrivé un peu à l'avance",
-            type: 'indication',
+              "tu es très ponctuel, je suis arrivée un peu à l'avance",
+            type: null,
             received: true
           }
         ],
@@ -539,7 +540,7 @@ export const followingMessage = async (message, playerName) => {
         messages: [
           {
             msg: "Le lac brille, créant une toile éblouissante de couleurs chatoyantes.",
-            type: null,
+            type: "indication",
             received: true
           },
           {
@@ -786,7 +787,7 @@ export const followingMessage = async (message, playerName) => {
             received: true
           },
           {
-            msg: "je serai heureuse que tu viennes",
+            msg: "je serais heureuse que tu viennes",
             type: null,
             received: true
           }
@@ -868,7 +869,7 @@ export const followingMessage = async (message, playerName) => {
           },
           {
             msg: "FIN DE LA PARTIE BONUS",
-            type: 'indication',
+            type: 'fin_chapitre',
             received: true
           }
         ],

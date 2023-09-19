@@ -29,6 +29,7 @@ const Conversation = ({
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
   const [receiveMessageSound, setReceiveMessageSound] = useState<Audio.Sound>();
   const [isWritingSound, setIsWritingSound] = useState<Audio.Sound>();
+  const [rdvTheme, setRdvTheme] = useState<Audio.Sound>();
   const [dotAnimation] = useState(new Animated.Value(0));
   const [imagePrenom, setImagePrenom] = useState('');
   
@@ -39,6 +40,11 @@ const Conversation = ({
     const _isWritingSound = await Audio.Sound.createAsync(require('../../../assets/musics/typing.mp3'));
     setReceiveMessageSound(_receiveMessageSound.sound);
     setIsWritingSound(_isWritingSound.sound);
+    const choices = JSON.parse(await AsyncStorage.getItem('choices'));
+    if(chapter === 4 && choices[0] === 'rdv' ){
+      const rdvTheme = await Audio.Sound.createAsync(require('../../../assets/musics/rdv_theme.mp3'));
+      await rdvTheme.sound.playAsync();
+    }
   }
 
   const stopPlayIsWrittingSound = async () => {
@@ -116,9 +122,18 @@ const Conversation = ({
       if (messages[0].type !== null) {
         if (messages[0].type !== 'indication') {
           if(messages[0].type !== 'link'){
-            const newChapter = {
-              num: chapter + 1,
+            let newChapter;
+            const choicesStorage = JSON.parse(await AsyncStorage.getItem('choices'));
+            if(choicesStorage[0] === 'rdv' && chapter === 4){
+              newChapter = {
+              num: chapter + 2,
               result: messages[0].type
+            }
+            } else {
+              newChapter = {
+                num: chapter + 1,
+                result: messages[0].type
+              }
             }
             await AsyncStorage.setItem('chapter', JSON.stringify(newChapter));
             setTimeout(() => {

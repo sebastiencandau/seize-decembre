@@ -21,6 +21,7 @@ export const startingConversation: IConversation =
 export const narativeIndications = [
     "Chapitre 1: Lucie",
     "Partie 2",
+    "23 Novembre : 18h00"
 ]
 
 export const followingMessage = async (message, playerName) => {

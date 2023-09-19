@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, StyleSheet, ImageBackground } from 'react-native';
 
 const NarativeScreen = ({ currentIndication }) => {
-  const backgroundImageUrl = 'https://www.warlegend.net/wp-content/uploads/screenshot1.jpg'; // Replace with your image URL
+  const backgroundImageUrl = 'https://www.numerama.com/wp-content/uploads/2018/08/ss_f589f1d664ad6932064052c265b59f9fa3eea322-1920x1080.jpg'; // Replace with your image URL
 
   return (
     <ImageBackground

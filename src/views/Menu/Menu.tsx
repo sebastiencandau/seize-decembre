@@ -9,12 +9,15 @@ import {
   ImageBackground,
   StyleSheet,
 } from 'react-native';
+import { choicesDescription } from '../../utils/chapters.utils';
 
 const Menu = ({ startGame, chapter, restartGame }) => {
 
   const [playerName, setPlayerName] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [restart, setRestart] = useState(false);
+  const [choicesModalVisible, setChoicesModalVisible] = useState(false);
+  const [choicesList, setChoicesList] = useState([]);
 
   console.log(chapter);
   const handlePress = async () => {
@@ -43,16 +46,26 @@ const Menu = ({ startGame, chapter, restartGame }) => {
     handlePress();
   };
 
+  const handlePressChoices = async () => {
+    const savedChoices = await AsyncStorage.getItem('choices');
+    if (savedChoices) {
+      const choices = JSON.parse(savedChoices);
+      setChoicesList(await choicesDescription());
+      setChoicesModalVisible(true);
+    }
+  };
+
   
 
   return (
     <ImageBackground
       source={{
-        uri: 'https://www.warlegend.net/wp-content/uploads/screenshot1.jpg',
+        uri: 'https://www.numerama.com/wp-content/uploads/2018/08/ss_f589f1d664ad6932064052c265b59f9fa3eea322-1920x1080.jpg',
       }}
       style={styles.backgroundImage}
       blurRadius={5}
     >
+      { chapter !== 7 && 
       <View style={styles.container}>
         <Text style={styles.title}>Seize décembre</Text>
         <TouchableOpacity onPress={handlePress} style={styles.button}>
@@ -62,8 +75,19 @@ const Menu = ({ startGame, chapter, restartGame }) => {
           <Text style={styles.buttonText}>Recommencer</Text>
         </TouchableOpacity>
       </View>
+      ||
+      <View style={styles.container}>
+      <Text style={styles.title}>Seize décembre</Text>
+      <TouchableOpacity onPress={handlePressChoices} style={styles.button}>
+        <Text style={styles.buttonText}>Voir mes choix</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handlePressRestart} style={styles.button}>
+          <Text style={styles.buttonText}>Recommencer</Text>
+        </TouchableOpacity>
+      <Text style={{marginTop: 15}}>La deuxième partie arrive bientôt...</Text>
+    </View>
+      }
 
-      {/* La modale */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -92,6 +116,44 @@ const Menu = ({ startGame, chapter, restartGame }) => {
           </View>
         </View>
       </Modal>
+            {/* Modale des choix */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={choicesModalVisible}
+        onRequestClose={() => {
+          setChoicesModalVisible(false);
+        }}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Vos choix :</Text>
+            {choicesList.map((choice, index) => (
+              <View>
+              <Text key={index} style={styles.choiceText}>
+                {choice}
+              </Text>
+              <View
+  style={{
+    borderBottomColor: 'black',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    marginTop: 8,
+    marginBottom: 8
+  }}
+/>
+              </View>
+            ))}
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => {
+                setChoicesModalVisible(false);
+              }}
+            >
+              <Text style={styles.closeButtonText}>Fermer</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ImageBackground>
   );
 };
@@ -112,12 +174,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
-    marginBottom: 20,
+    marginBottom: 8,
   },
   button: {
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
     padding: 10,
-    marginTop: 20,
+    marginTop: 10,
     borderRadius: 5,
   },
   buttonText: {
@@ -155,6 +217,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   startButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  choiceText: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  closeButton: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  closeButtonText: {
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',

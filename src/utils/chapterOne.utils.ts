@@ -202,9 +202,11 @@ export const startingConversation: IConversation =
 export const narativeIndications = [
     "Chapitre 1: Lucie",
     "Partie 1",
+    "18 Novembre",
     "Lucie est une fille de votre lycée",
     "Elle n'est pas dans votre classe mais vous partagez un ami en commun, Matéo.",
-    "Vous ne lui avez encore jamais parlé tout les deux. Un beau jour vous recevez une demande en ami..."
+    "Elle et vous n'avez encore jamais parlé",
+    "Elle vous demande en ami..."
 ]
 
 export const startChapterOne = () => {
