@@ -155,6 +155,7 @@ const Menu = ({ startGame, chapter, restartGame }) => {
             )}
           </View>
         ))}
+
       </ScrollView>
       <TouchableOpacity
         style={styles.closeButton}
@@ -253,7 +254,7 @@ const styles = StyleSheet.create({
     marginRight: 10
   },  
   choicesScrollView: {
-    maxHeight: 600, // Ajustez la hauteur maximale de la ScrollView selon vos besoins
+    maxHeight: 500, // Ajustez la hauteur maximale de la ScrollView selon vos besoins
     marginBottom: 10, // Espacement entre la liste des choix et le bouton Fermer
   },
   closeButton: {

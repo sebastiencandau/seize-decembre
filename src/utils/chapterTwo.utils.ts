@@ -652,25 +652,6 @@ export const followingMessage = async (message, playerName) => {
                     "je ne comprends pas"
                 ]
             };
-        case "crois moi, je te comprends mieux que personne Lucie":
-            return {
-                messages: [
-                    {
-                        msg: "on se ressemble toi et moi",
-                        type: null,
-                        received: true
-                    },
-                    {
-                        msg: `je pense que tu es quelqu'un de bien ${playerName}`,
-                        type: null,
-                        received: true
-                    }
-                ],
-                choices: [
-                    "c'est toi qui est gentille là",
-                    "qu'est-ce qui te fait dire ça ?"
-                ]
-            };
         case "je ne comprends pas":
             return {
                 messages: [
@@ -853,12 +834,12 @@ export const followingMessage = async (message, playerName) => {
                     "j'irai écouter + tard"
                 ]
             };
-        case "c'est une belle musique ":
+        case "c'est une belle musique":
         case "j'irai écouter + tard":
             return {
                 messages: [
                     {
-                        msg: "oui vraiment",
+                        msg: "c'est chouette",
                         type: null,
                         received: true
                     },
