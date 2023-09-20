@@ -2,7 +2,8 @@ export interface IMessage {
     type: string | null,
     prenom?: string,
     received: boolean,
-    msg: string
+    msg: string,
+    link?: string
 } 
 
 export interface IConversation {

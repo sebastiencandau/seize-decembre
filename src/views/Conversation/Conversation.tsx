@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image, View, Text, TextInput, TouchableOpacity,ImageBackground, Animated, FlatList, StyleSheet, Modal, Dimensions, TouchableHighlight, Linking } from 'react-native';
-import { followingMessage } from '../../utils/chapters.utils';
+import { followingMessage } from '../../utils/chapterOne/chaptersChapterOne.utils';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { IConversation, IMessage } from '../../interfaces/messages.interface';
 import { Audio } from 'expo-av';
@@ -32,6 +32,7 @@ const Conversation = ({
   const [rdvTheme, setRdvTheme] = useState<Audio.Sound>();
   const [dotAnimation] = useState(new Animated.Value(0));
   const [imagePrenom, setImagePrenom] = useState('');
+  const [playedMusic, setPlayedMusic] = useState<Audio.Sound>();
   
 
 
@@ -63,6 +64,13 @@ const Conversation = ({
     await receiveMessageSound.playAsync();
   }
 
+  const playMusic = async (link: string) => {
+    console.log('alo');
+    const theme = await Audio.Sound.createAsync(require(`../../../assets/musics/${link}.mp3`));
+    setPlayedMusic(theme.sound);
+    await theme.sound.playAsync();
+  }
+
   useEffect(() => {
     if (futureMessages.length > 0) {
       /*
@@ -71,7 +79,7 @@ const Conversation = ({
       */
 
       // message reçu par quelqu'un
-      if (futureMessages[0].received && !futureMessages[0].type) {
+      if (futureMessages[0].received && !futureMessages[0].type || futureMessages[0].type === "music") {
         setTimeout(() => {
           playIsWrittingSound();
           setIsWriting(true);
@@ -83,6 +91,10 @@ const Conversation = ({
             setImagePrenom( `../../../assets/${futureMessages[0].prenom}.jpg`)
           } else {
             setImagePrenom(undefined);
+          }
+          if(futureMessages[0].type === 'music'){
+            console.log('pitié');
+            playMusic(futureMessages[0].link);
           }
           setMessages([futureMessages[0], ...messages]);
           const updatedFutureMessages = futureMessages.filter((msg) => msg !== futureMessages[0]);
@@ -121,7 +133,7 @@ const Conversation = ({
     if (messages.length > 0) {
       if (messages[0].type !== null) {
         if (messages[0].type !== 'indication') {
-          if(messages[0].type !== 'link'){
+          if(messages[0].type !== 'music'){
             let newChapter;
             const choicesStorage = JSON.parse(await AsyncStorage.getItem('choices'));
             if(choicesStorage[0] === 'rdv' && chapter === 3){
@@ -143,6 +155,9 @@ const Conversation = ({
             }
             await AsyncStorage.setItem('chapter', JSON.stringify(newChapter));
             setTimeout(() => {
+              if(playedMusic){
+                playedMusic.stopAsync();
+              }
               closeModal();
             }, 2000);
           }
@@ -223,7 +238,7 @@ const Conversation = ({
 
   const renderMessage = ({ item }) => (
     <>
-      {item.type === null && (
+      {(item.type === null || item.type === 'music') && (
         <View style={{flexDirection: 'column', 
         alignItems: item.received ? 'flex-start' : 'flex-end',  
         }}>
@@ -312,7 +327,13 @@ const Conversation = ({
           <View style={styles.modalContent}>
             <Text>Voulez vous retourner au menu principal ?</Text>
             <Text>la partie {chapter} ne sera pas sauvegardée</Text>
-            <TouchableOpacity onPress={closeModal} style={styles.confirmationButton}>
+            <TouchableOpacity onPress={() => {
+              if(playedMusic){
+                playedMusic.stopAsync();
+              }
+              closeModal();
+              }
+              } style={styles.confirmationButton}>
               <Text style={styles.confirmationButtonText}>Oui</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={toggleConfirmationModal} style={styles.confirmationButton}>

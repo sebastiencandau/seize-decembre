@@ -5,11 +5,11 @@ import { Text, View, Modal } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import NarativeScreen from './src/components/NarativeScreen';
-import { narativeIndicationsForChapter, startingConversation } from './src/utils/chapters.utils';
+import { narativeIndicationsForChapter, startingConversation } from './src/utils/chapterOne/chaptersChapterOne.utils';
 import Conversation from './src/views/Conversation/Conversation';
-import Menu from './src/views/Menu/Menu';
+import MenuChapterOne from './src/views/Menu/MenuChapterOne';
+import MenuChapterTwo from './src/views/Menu/MenuChapterTwo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Audio } from 'expo-av';
 import { IConversation } from './src/interfaces/messages.interface';
 
 
@@ -24,24 +24,13 @@ export default function App() {
   const [index, setIndex] = useState(0);
   const [playerName, setPlayerName] = useState<string>();
   const [gameStarted, setGameStarted] = useState(false);
-  const [backgroundMusic, setBackgroundMusic] = useState<Audio.Sound>();
 
   async function setUpGame() {
 
     const chapter = await AsyncStorage.getItem('chapter');
 
     if(await AsyncStorage.getItem('chapter')){
-  
       if(chapter){
-        if(JSON.parse(chapter).num == 6){
-          const { sound } = await Audio.Sound.createAsync( require('./assets/musics/chapter_one_ending_music.mp3'));
-          setBackgroundMusic(sound); 
-          console.log('ui'); 
-        } else {
-        // set music
-        const { sound } = await Audio.Sound.createAsync( require('./assets/musics/max_and_chloe.mp3'));
-        setBackgroundMusic(sound);
-        }
 
         if(JSON.parse(chapter).result !== "loser"){
           setCurrentChapter(JSON.parse(chapter).num)
@@ -51,16 +40,10 @@ export default function App() {
           setConversationChapter(await startingConversation(1));
         }
       } else {
-                // set music
-                const { sound } = await Audio.Sound.createAsync( require('./assets/musics/max_and_chloe.mp3'));
-                setBackgroundMusic(sound);
         setCurrentChapter(1);
         setConversationChapter(await startingConversation(1));
       }
       }else {
-                // set music
-                const { sound } = await Audio.Sound.createAsync( require('./assets/musics/max_and_chloe.mp3'));
-                setBackgroundMusic(sound);
         setCurrentChapter(1);
         setConversationChapter(await startingConversation(1));
       }
@@ -69,23 +52,10 @@ export default function App() {
     
   }
 
-  const playMusic = async () => {
-    await backgroundMusic!.playAsync();
-  }
-
-  const stopMusic = async () => {
-    await backgroundMusic!.stopAsync();
-  }
-
-  React.useEffect(() => {
-    setUpGame();
+  useEffect(() => {
+setUpGame();
   }, []);
 
-  React.useEffect(() => {
-    if(backgroundMusic){
-      playMusic();
-    }
-  }, [backgroundMusic]);
 
   useEffect(() => {
     if(narrativeIndications){
@@ -93,7 +63,7 @@ export default function App() {
       const timer = setInterval(() => {
         setCurrentIndication(narrativeIndications[index]);
         setIndex((prevIndex) => prevIndex + 1);
-      }, 5000); // 1000 ms = 1 second
+      }, 100); // 1000 ms = 1 second
       return () => {
         clearInterval(timer);
       };
@@ -102,10 +72,18 @@ export default function App() {
   }, [index, narrativeIndications]);
 
   const closeModal = async () => {
-    stopMusic();
     setIndex(0);
     setNarrativeIndications(undefined);
     setUpGame();
+  }
+
+  const startChapterTwo = async () => {
+    const newChapter = {
+      num: 7,
+      result: 'new_chapter'
+    }
+    await AsyncStorage.setItem('chapter', JSON.stringify(newChapter));
+    setCurrentChapter(7);
   }
 
   const restartGame = async () => {
@@ -119,7 +97,6 @@ export default function App() {
 
   const startGame = async () => {
     const name = await AsyncStorage.getItem('playerName');
-    console.log(currentChapter);
     if(name){
       setPlayerName(name);
 
@@ -129,12 +106,15 @@ export default function App() {
 
   const renderChapterScreen = (currentIndication) => {
     if(!narrativeIndications) {
-      return <Menu startGame={startGame} restartGame={restartGame} chapter={currentChapter}></Menu>
+      if(currentChapter === undefined || (currentChapter && currentChapter <= 6)){
+        return <MenuChapterOne changeChapter={startChapterTwo} startGame={startGame} restartGame={restartGame} chapter={currentChapter}></MenuChapterOne>
+      } else if ((currentChapter && currentChapter > 6)){
+        return <MenuChapterTwo startGame={startGame} restartGame={restartGame} chapter={currentChapter}></MenuChapterTwo>
+      }
     }
     else if (index <= narrativeIndications.length) {
       return <NarativeScreen currentIndication={currentIndication} />;
     } else {
-      stopMusic();
       return        (
       <Modal>
       <Conversation
