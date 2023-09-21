@@ -5,6 +5,7 @@ import { Text, View, Modal } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import NarativeScreen from './src/components/NarativeScreen';
+import NarativeScreenIntroChapterTwo from './src/components/NarativeScreenIntroChapterTwo';
 import { narativeIndicationsForChapter, startingConversation } from './src/utils/chapterOne/chaptersChapterOne.utils';
 import Conversation from './src/views/Conversation/Conversation';
 import MenuChapterOne from './src/views/Menu/MenuChapterOne';
@@ -78,12 +79,22 @@ setUpGame();
   }
 
   const startChapterTwo = async () => {
-    const newChapter = {
-      num: 7,
-      result: 'new_chapter'
+    if(currentChapter === 6) {
+      const newChapter = {
+        num: 7,
+        result: 'new_chapter'
+      }
+      await AsyncStorage.setItem('chapter', JSON.stringify(newChapter));
+      setCurrentChapter(7);
+    } else {
+      const newChapter = {
+        num: 8,
+        result: 'new_chapter'
+      }
+      await AsyncStorage.setItem('chapter', JSON.stringify(newChapter));
+      setCurrentChapter(8);
     }
-    await AsyncStorage.setItem('chapter', JSON.stringify(newChapter));
-    setCurrentChapter(7);
+    
   }
 
   const restartGame = async () => {
@@ -109,7 +120,11 @@ setUpGame();
       if(currentChapter === undefined || (currentChapter && currentChapter <= 6)){
         return <MenuChapterOne changeChapter={startChapterTwo} startGame={startGame} restartGame={restartGame} chapter={currentChapter}></MenuChapterOne>
       } else if ((currentChapter && currentChapter > 6)){
-        return <MenuChapterTwo startGame={startGame} restartGame={restartGame} chapter={currentChapter}></MenuChapterTwo>
+        if(currentChapter === 7){
+          return <NarativeScreenIntroChapterTwo changeChapter={startChapterTwo}></NarativeScreenIntroChapterTwo>
+        } else {
+          return <MenuChapterTwo startGame={startGame} restartGame={restartGame} chapter={currentChapter}></MenuChapterTwo>
+        }
       }
     }
     else if (index <= narrativeIndications.length) {

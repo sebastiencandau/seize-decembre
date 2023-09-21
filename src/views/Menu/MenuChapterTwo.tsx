@@ -92,7 +92,7 @@ const Menu = ({ startGame, chapter, restartGame }) => {
         <Text style={styles.title}>Seize décembre</Text>
         <Text style={styles.title}>Chapitre 2: Aveuglés</Text>
         <TouchableOpacity onPress={handlePress} style={styles.button}>
-          <Text style={styles.buttonText}>{chapter === 7 ? 'Commencer': 'Continuer'}</Text>
+          <Text style={styles.buttonText}>{chapter === 8 ? 'Commencer': 'Continuer'}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handlePressChoices} style={styles.button}>
         <Text style={styles.buttonText}>Voir mes choix</Text>
