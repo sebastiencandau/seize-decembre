@@ -44,7 +44,7 @@ const YourComponent = ({changeChapter}) => {
             changeChapter();
           } else {setCurrentIndex(currentIndex + 1)}
         }} style={styles.button}>
-          <Text style={styles.buttonText}>{narrative.length === currentIndex ? "Commencer" : "Suivant ➔"}</Text>
+          <Text style={styles.buttonText}>{narrative.length === currentIndex ? "Commencer le chapitre 2" : "Suivant ➔"}</Text>
         </TouchableOpacity>
       </View>
       </View>
