@@ -12,7 +12,7 @@ import {
   ScrollView
 } from 'react-native';
 import { Audio } from 'expo-av';
-import { choicesDescription } from '../../utils/chapterOne/chaptersChapterOne.utils';
+import { choicesDescription } from '../../utils/chapters.utils';
 
 const Menu = ({changeChapter, startGame, chapter, restartGame }) => {
 

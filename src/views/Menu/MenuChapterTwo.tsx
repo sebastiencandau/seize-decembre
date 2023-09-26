@@ -11,7 +11,7 @@ import {
   Image,
   ScrollView
 } from 'react-native';
-import { choicesDescription } from '../../utils/chapterOne/chaptersChapterOne.utils';
+import { choicesDescription } from '../../utils/chapters.utils';
 import { Audio } from 'expo-av';
 
 const Menu = ({ startGame, chapter, restartGame }) => {

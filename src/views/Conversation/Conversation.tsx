@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image, View, Text, TextInput, TouchableOpacity,ImageBackground, Animated, FlatList, StyleSheet, Modal, Dimensions, TouchableHighlight, Linking } from 'react-native';
-import { followingMessage } from '../../utils/chapterOne/chaptersChapterOne.utils';
+import { followingMessage } from '../../utils/chapters.utils';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { IConversation, IMessage } from '../../interfaces/messages.interface';
 import { Audio } from 'expo-av';

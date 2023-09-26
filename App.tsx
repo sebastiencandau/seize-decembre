@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import NarativeScreen from './src/components/NarativeScreen';
 import NarativeScreenIntroChapterTwo from './src/components/NarativeScreenIntroChapterTwo';
-import { narativeIndicationsForChapter, startingConversation } from './src/utils/chapterOne/chaptersChapterOne.utils';
+import { narativeIndicationsForChapter, startingConversation } from './src/utils/chapters.utils';
 import Conversation from './src/views/Conversation/Conversation';
 import MenuChapterOne from './src/views/Menu/MenuChapterOne';
 import MenuChapterTwo from './src/views/Menu/MenuChapterTwo';
