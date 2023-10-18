@@ -64,7 +64,7 @@ setUpGame();
       const timer = setInterval(() => {
         setCurrentIndication(narrativeIndications[index]);
         setIndex((prevIndex) => prevIndex + 1);
-      }, 100); // 1000 ms = 1 second
+      }, 2000); // 1000 ms = 1 second
       return () => {
         clearInterval(timer);
       };
@@ -107,6 +107,7 @@ setUpGame();
   }
 
   const startGame = async () => {
+    console.log(currentChapter);
     const name = await AsyncStorage.getItem('playerName');
     if(name){
       setPlayerName(name);
@@ -117,7 +118,7 @@ setUpGame();
 
   const renderChapterScreen = (currentIndication) => {
     if(!narrativeIndications) {
-      if(currentChapter === undefined || (currentChapter && currentChapter <= 6)){
+      if(currentChapter === undefined || (currentChapter && currentChapter <= 6) || (currentChapter && currentChapter === 999)){
         return <MenuChapterOne changeChapter={startChapterTwo} startGame={startGame} restartGame={restartGame} chapter={currentChapter}></MenuChapterOne>
       } else if ((currentChapter && currentChapter > 6)){
         if(currentChapter === 7){

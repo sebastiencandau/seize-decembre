@@ -66,6 +66,7 @@ const Menu = ({changeChapter, startGame, chapter, restartGame }) => {
     backgroundMusic.stopAsync();
     AsyncStorage.setItem('choices', JSON.stringify([]));
     await AsyncStorage.setItem('playerName', playerName);
+    setModalVisible(false);
     handlePress();
   };
 
@@ -74,6 +75,7 @@ const Menu = ({changeChapter, startGame, chapter, restartGame }) => {
     if (savedChoices) {
       const choices = JSON.parse(savedChoices);
       setChoicesList(await choicesDescription());
+      
       setChoicesModalVisible(true);
     }
   };  
@@ -90,7 +92,10 @@ const Menu = ({changeChapter, startGame, chapter, restartGame }) => {
       <View style={styles.container}>
         <Text style={styles.title}>Seize décembre</Text>
         <Text style={styles.title}>Chapitre 1: Lucie</Text>
-        <TouchableOpacity onPress={handlePress} style={styles.button}>
+        <TouchableOpacity onPress={() => {
+              backgroundMusic.stopAsync();
+              handlePress();
+        }} style={styles.button}>
           <Text style={styles.buttonText}>{chapter === 1 || !chapter ? 'Commencer': 'Continuer'}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handlePressRestart} style={styles.button}>
@@ -135,7 +140,6 @@ const Menu = ({changeChapter, startGame, chapter, restartGame }) => {
             <TouchableOpacity
               style={styles.startButton}
               onPress={() => {
-                setModalVisible(false);
                 handleStartGame();
               }}
             >
