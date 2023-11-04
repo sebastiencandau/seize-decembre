@@ -25,15 +25,15 @@ const Menu = ({ startGame, chapter, restartGame }) => {
 
 
   const startMusic = async () => {
-    if(chapter){
-      if(chapter === 88172 /* todo */){
-        const { sound } = await Audio.Sound.createAsync( require('../../../assets/musics/chapter_one_ending_music.mp3'));
+    if (chapter) {
+      if (chapter === 88172 /* todo */) {
+        const { sound } = await Audio.Sound.createAsync(require('../../../assets/musics/chapter_one_ending_music.mp3'));
         sound.playAsync();
-        setBackgroundMusic(sound); 
+        setBackgroundMusic(sound);
       } else {
-      const { sound } = await Audio.Sound.createAsync( require('../../../assets/musics/labyrinthe_of_pan.mp3'));
-      sound.playAsync()
-      setBackgroundMusic(sound);
+        const { sound } = await Audio.Sound.createAsync(require('../../../assets/musics/labyrinthe_of_pan.mp3'));
+        sound.playAsync()
+        setBackgroundMusic(sound);
       }
     }
   }
@@ -43,14 +43,10 @@ const Menu = ({ startGame, chapter, restartGame }) => {
   }, [chapter]);
 
   const handlePress = async () => {
-    if(await AsyncStorage.getItem('playerName')){
-      if(!restart){
-        startGame();
-      } else {
-        restartGame();
-      }
+    if (!restart) {
+      startGame();
     } else {
-      setModalVisible(true);
+      restartGame();
     }
   };
 
@@ -78,7 +74,7 @@ const Menu = ({ startGame, chapter, restartGame }) => {
     }
   };
 
-  
+
 
   return (
     <ImageBackground
@@ -92,64 +88,64 @@ const Menu = ({ startGame, chapter, restartGame }) => {
         <Text style={styles.title}>Seize décembre</Text>
         <Text style={styles.title}>Chapitre 2: Aveuglés</Text>
         <TouchableOpacity onPress={handlePress} style={styles.button}>
-          <Text style={styles.buttonText}>{chapter === 8 ? 'Commencer': 'Continuer'}</Text>
+          <Text style={styles.buttonText}>{chapter === 8 ? 'Commencer' : 'Continuer'}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handlePressChoices} style={styles.button}>
-        <Text style={styles.buttonText}>Voir mes choix</Text>
-      </TouchableOpacity>
+          <Text style={styles.buttonText}>Voir mes choix</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={handlePressRestart} style={styles.button}>
           <Text style={styles.buttonText}>Recommencer le chapitre</Text>
         </TouchableOpacity>
       </View>
 
-<Modal
-  animationType="slide"
-  transparent={true}
-  visible={choicesModalVisible}
-  onRequestClose={() => {
-    setChoicesModalVisible(false);
-  }}
->
-  <View style={styles.modalContainer}>
-    <View style={styles.modalContent}>
-      <Text style={styles.modalTitle}>Vos choix :</Text>
-      <ScrollView style={styles.choicesScrollView}>
-        {choicesList.map((choice, index) => (
-          <View key={index} style={styles.ModalChoice}>
-            {index % 2 === 0 ? ( // Alterne entre gauche et droite pour chaque choix
-              <>
-                {choice.img && (
-                  <Image source={choice.img} style={styles.choiceImage} />
-                )}
-                <Text style={styles.choiceText}>
-                  {choice.desc}
-                </Text>
-              </>
-            ) : (
-              <>
-                <Text style={styles.choiceText}>
-                  {choice.desc}
-                </Text>
-                {choice.img && (
-                  <Image source={choice.img} style={styles.choiceImage} />
-                )}
-              </>
-            )}
-          </View>
-        ))}
-
-      </ScrollView>
-      <TouchableOpacity
-        style={styles.closeButton}
-        onPress={() => {
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={choicesModalVisible}
+        onRequestClose={() => {
           setChoicesModalVisible(false);
         }}
       >
-        <Text style={styles.closeButtonText}>Fermer</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-</Modal>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Vos choix :</Text>
+            <ScrollView style={styles.choicesScrollView}>
+              {choicesList.map((choice, index) => (
+                <View key={index} style={styles.ModalChoice}>
+                  {index % 2 === 0 ? ( // Alterne entre gauche et droite pour chaque choix
+                    <>
+                      {choice.img && (
+                        <Image source={choice.img} style={styles.choiceImage} />
+                      )}
+                      <Text style={styles.choiceText}>
+                        {choice.desc}
+                      </Text>
+                    </>
+                  ) : (
+                    <>
+                      <Text style={styles.choiceText}>
+                        {choice.desc}
+                      </Text>
+                      {choice.img && (
+                        <Image source={choice.img} style={styles.choiceImage} />
+                      )}
+                    </>
+                  )}
+                </View>
+              ))}
+
+            </ScrollView>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => {
+                setChoicesModalVisible(false);
+              }}
+            >
+              <Text style={styles.closeButtonText}>Fermer</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ImageBackground>
   );
 };
@@ -234,7 +230,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain', // Ajustez le mode de redimensionnement en fonction de vos besoins
     marginBottom: 10, // Marge inférieure pour espacer l'image de la description
     marginRight: 10
-  },  
+  },
   choicesScrollView: {
     maxHeight: 500, // Ajustez la hauteur maximale de la ScrollView selon vos besoins
     marginBottom: 10, // Espacement entre la liste des choix et le bouton Fermer

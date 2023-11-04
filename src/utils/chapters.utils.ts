@@ -17,12 +17,13 @@ export const narativeIndicationsForChapter = async (chapterNumber) => {
     } else if (chapterNumber === 3) {
         return chapterThree.narativeIndications;
     } else if (chapterNumber === 4) {
-        return chapterFour.narativeIndications;
-    } else if(chapterNumber === 999){
+                    return chapterFour.narativeIndications;
+        } else if(chapterNumber === 999){
         return chapterRdv.narativeIndications;
     } else if(chapterNumber === 5){
         return chapterFinal.narativeIndications;
     } else if(chapterNumber === 8){
+        console.log('ici');
         return chapterHeight.narativeIndications;
     }
 }
@@ -35,12 +36,13 @@ export const followingMessage = async (chapterNumber, message, playerName) => {
     } else if (chapterNumber === 3) {
         return chapterThree.followingMessage(message, playerName);
     } else if (chapterNumber === 4) {
-        return chapterFour.followingMessage(message, playerName);
-    } else if (chapterNumber === 5){
+                    return chapterFour.followingMessage(message, playerName);
+        } else if (chapterNumber === 5){
         return chapterFinal.followingMessage(message, playerName);
     } else if (chapterNumber === 999){
         return chapterRdv.followingMessage(message, playerName);
     } else if(chapterNumber === 8){
+        console.log('here')
         console.log(chapterHeight.followingMessage(message, playerName))
         return chapterHeight.followingMessage(message, playerName);
     }
@@ -54,8 +56,8 @@ export const startingConversation = async (chapterNumber) => {
     } else if (chapterNumber === 3) {
         return chapterThree.startingConversation;
     } else if (chapterNumber === 4) {
-        return chapterFour.startingConversation;
-    } else if(chapterNumber === 999){
+                    return chapterFour.startingConversation;
+        } else if(chapterNumber === 999){
         return chapterRdv.startingConversation;
     } else if(chapterNumber === 5){
         return chapterFinal.startingConversation;
