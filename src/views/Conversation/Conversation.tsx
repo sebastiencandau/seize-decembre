@@ -9,7 +9,7 @@ import { Link } from '@react-navigation/native';
 import * as AllImages from '../../../assets';
 
 const screen = Dimensions.get('window');
-const screenWidth = screen.width - 80;
+const screenWidth = screen.width;
 
 const Conversation = ({
   contactName,
@@ -262,7 +262,7 @@ const Conversation = ({
             <Text
               style={{
                 color: item.received ? 'black' : 'white',
-                fontSize: 15,
+                fontSize: 18,
                 fontStyle: 'normal',
               }}
             >
@@ -385,7 +385,7 @@ const Conversation = ({
             }
           </View>
           <View style={styles.inputContainer}>
-            <TouchableOpacity onPress={futureMessages.length <= 0 ? doChoice : () => { }}>
+            <TouchableOpacity style={{ width: screenWidth - 140}} onPress={futureMessages.length <= 0 ? doChoice : () => { }}>
               <TextInput
                 style={styles.textInput}
                 placeholder={futureMessages.length <= 0 ? "Faites un choix..." : ""}
@@ -431,8 +431,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   convPictureContainer: {
-    width: 32,
-    height: 32,
+    width: 48,
+    height: 48,
     borderRadius: 50,
     overflow: 'hidden',
     marginRight: 8,
@@ -456,21 +456,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputContainer: {
+    width: screenWidth -30,
     flexDirection: 'row',
-    width: '100%',
     alignItems: 'center',
+    justifyContent: 'space-between',
     padding: 8,
     backgroundColor: 'white',
   },
   textInput: {
-    width: screenWidth,
-    flex: 1,
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 8,
-    marginRight: 8,
+    fontSize: 15,
+    backgroundColor: '#e4e6eb',
+    marginEnd: 10,
+    borderRadius: 50,
+    padding: 10,
+    borderColor: 'transparent',
+    borderWidth: 0,
+    outline: 'none',  // Ajoutez cette ligne pour supprimer la bordure lors du focus
+    
   },
   sendButton: {
+    textAlign: 'center',
+    width: 100,
+    marginRight: 2,
     padding: 8,
     backgroundColor: '#80cbc4',
     borderRadius: 8,

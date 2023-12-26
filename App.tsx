@@ -57,7 +57,7 @@ export default function App() {
         const timer = setInterval(() => {
           setCurrentIndication(narrativeIndications[index]);
           setIndex((prevIndex) => prevIndex + 1);
-        }, 2000); // 1000 ms = 1 second
+        }, 100); // 1000 ms = 1 second
         return () => {
           clearInterval(timer);
         };
@@ -121,7 +121,7 @@ export default function App() {
          else {
           return <MenuChapterTwo startGame={startChapterTwo} restartGame={restartGame} chapter={currentChapter}></MenuChapterTwo>
         }
-      }
+      } 
     }
     else if (index <= narrativeIndications.length) {
       return <NarativeScreen currentIndication={currentIndication} />;
